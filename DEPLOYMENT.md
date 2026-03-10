@@ -107,7 +107,7 @@ python -c "import secrets; print(secrets.token_urlsafe(50))"
 
 ### 4.2 Virtualenv
 
-- **Virtualenv**: `/home/YOUR_USERNAME/forensic/venv`
+- **Virtualenv**: `/home/nazeebshaik/forensic/venv`
 
 ### 4.3 Static Files
 
@@ -115,8 +115,8 @@ Add mappings:
 
 | URL          | Directory                               |
 |--------------|-----------------------------------------|
-| /static/     | /home/YOUR_USERNAME/forensic/staticfiles |
-| /media/      | /home/YOUR_USERNAME/forensic/media      |
+| /static/     | /home/nazeebshaik/forensic/staticfiles |
+| /media/      | /home/nazeebshaik/forensic/media      |
 
 ---
 
