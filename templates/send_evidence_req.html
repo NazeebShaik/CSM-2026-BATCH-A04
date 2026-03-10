@@ -1,0 +1,414 @@
+{% extends 'court_dashboard.html' %}
+
+{% block body %}
+
+<!-- Modern Evidence Request Interface -->
+<div class="modern-container">
+    <div class="glass-card">
+        <div class="card-header">
+            <div class="header-icon">
+                <i class="fas fa-file-contract"></i>
+            </div>
+            <div class="header-content">
+                <h2 class="card-title">Evidence Management</h2>
+                <p class="card-subtitle">Request evidence for pending cases</p>
+            </div>
+        </div>
+
+        <div class="card-body">
+            {% if msg %}
+            <div class="alert alert-success alert-modern">
+                <i class="fas fa-check-circle"></i>
+                <span>{{ msg }}</span>
+            </div>
+            {% endif %}
+            
+            {% if error %}
+            <div class="alert alert-error alert-modern">
+                <i class="fas fa-exclamation-circle"></i>
+                <span>{{ error }}</span>
+            </div>
+            {% endif %}
+
+            <form method="post" class="modern-form">
+                {% csrf_token %}
+                
+                <div class="form-group">
+                    <label for="case_number" class="form-label">
+                        <i class="fas fa-gavel"></i>
+                        Select Case
+                    </label>
+                    <div class="select-wrapper">
+                        <select class="modern-select" id="case_number" name="case_number" required>
+                            <option value="" disabled selected>Choose a case number</option>
+                            {% for evidence in pending_evidence %}
+                                <option value="{{ evidence.case_number }}">
+                                    Case #{{ evidence.case_number }}
+                                    {% if evidence.case_name %}
+                                        - {{ evidence.case_name }}
+                                    {% endif %}
+                                </option>
+                            {% endfor %}
+                        </select>
+                        <div class="select-arrow">
+                            <i class="fas fa-chevron-down"></i>
+                        </div>
+                    </div>
+                    <p class="form-hint">
+                        <i class="fas fa-info-circle"></i>
+                        {{ pending_evidence|length }} pending case{{ pending_evidence|length|pluralize }} available
+                    </p>
+                </div>
+
+                <div class="form-actions">
+                    <button type="submit" class="btn-modern btn-primary">
+                        <i class="fas fa-paper-plane"></i>
+                        Send Evidence Request
+                    </button>
+                    
+                </div>
+            </form>
+
+            {% comment %} {% if pending_evidence %}
+            <div class="cases-preview">
+                <h4 class="preview-title">
+                    <i class="fas fa-list-alt"></i>
+                    Available Cases
+                </h4>
+                <div class="cases-grid">
+                    {% for evidence in pending_evidence|slice:":3" %}
+                    <div class="case-card">
+                        <div class="case-number">#{{ evidence.case_number }}</div>
+                        {% if evidence.case_name %}
+                        <div class="case-name">{{ evidence.case_name }}</div>
+                        {% endif %}
+                        <div class="case-status">
+                            <span class="status-badge pending">Evidence Pending</span>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+            {% endif %} {% endcomment %}
+        </div>
+
+        <div class="card-footer">
+            <div class="footer-info">
+                <i class="fas fa-shield-alt"></i>
+                <span>All requests are securely logged and encrypted</span>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    /* Modern CSS Variables */
+    :root {
+        --primary-color: #4361ee;
+        --secondary-color: #3a0ca3;
+        --success-color: #4cc9f0;
+        --error-color: #f72585;
+        --background-color: #f8f9fa;
+        --card-bg: rgba(255, 255, 255, 0.95);
+        --text-primary: #2b2d42;
+        --text-secondary: #6c757d;
+        --border-radius: 16px;
+        --shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+        --glass-effect: blur(10px);
+    }
+
+    /* Main Container */
+    .modern-container {
+        min-height: 100vh;
+        background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+        padding: 2rem;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    /* Glass Card */
+    .glass-card {
+        background: var(--card-bg);
+        backdrop-filter: var(--glass-effect);
+        border-radius: var(--border-radius);
+        box-shadow: var(--shadow);
+        width: 100%;
+        max-width: 800px;
+        overflow: hidden;
+        border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+
+    /* Card Header */
+    .card-header {
+        background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+        color: white;
+        padding: 2rem;
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+    }
+
+    .header-icon {
+        font-size: 2.5rem;
+        opacity: 0.9;
+    }
+
+    .header-content {
+        flex: 1;
+    }
+
+    .card-title {
+        font-size: 1.8rem;
+        font-weight: 700;
+        margin: 0;
+    }
+
+    .card-subtitle {
+        opacity: 0.9;
+        margin: 0.5rem 0 0 0;
+        font-size: 0.95rem;
+    }
+
+    /* Card Body */
+    .card-body {
+        padding: 2.5rem;
+    }
+
+    /* Modern Alerts */
+    .alert-modern {
+        padding: 1rem 1.5rem;
+        border-radius: 12px;
+        margin-bottom: 2rem;
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        border: none;
+    }
+
+    .alert-success {
+        background: rgba(76, 201, 240, 0.15);
+        color: #0c4a6e;
+        border-left: 4px solid var(--success-color);
+    }
+
+    .alert-error {
+        background: rgba(247, 37, 133, 0.15);
+        color: #831843;
+        border-left: 4px solid var(--error-color);
+    }
+
+    /* Modern Form */
+    .modern-form {
+        margin-bottom: 2.5rem;
+    }
+
+    .form-group {
+        margin-bottom: 2rem;
+    }
+
+    .form-label {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        font-weight: 600;
+        color: var(--text-primary);
+        margin-bottom: 0.75rem;
+        font-size: 1rem;
+    }
+
+    .select-wrapper {
+        position: relative;
+    }
+
+    .modern-select {
+        width: 100%;
+        padding: 1rem 1.5rem;
+        border: 2px solid #e2e8f0;
+        border-radius: 12px;
+        background: white;
+        font-size: 1rem;
+        color: var(--text-primary);
+        appearance: none;
+        transition: all 0.3s ease;
+        cursor: pointer;
+    }
+
+    .modern-select:focus {
+        outline: none;
+        border-color: var(--primary-color);
+        box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.1);
+    }
+
+    .select-arrow {
+        position: absolute;
+        right: 1.5rem;
+        top: 50%;
+        transform: translateY(-50%);
+        color: #94a3b8;
+        pointer-events: none;
+    }
+
+    .form-hint {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        font-size: 0.875rem;
+        color: var(--text-secondary);
+        margin-top: 0.5rem;
+    }
+
+    /* Form Actions */
+    .form-actions {
+        display: flex;
+        gap: 1rem;
+        margin-top: 2rem;
+    }
+
+    .btn-modern {
+        flex: 1;
+        padding: 1rem 1.5rem;
+        border: none;
+        border-radius: 12px;
+        font-weight: 600;
+        font-size: 1rem;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.5rem;
+    }
+
+    .btn-primary {
+        background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+        color: white;
+    }
+
+    .btn-primary:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(67, 97, 238, 0.3);
+    }
+
+    .btn-secondary {
+        background: #f1f5f9;
+        color: var(--text-primary);
+        border: 2px solid #e2e8f0;
+    }
+
+    .btn-secondary:hover {
+        background: #e2e8f0;
+        transform: translateY(-2px);
+    }
+
+    /* Cases Preview */
+    .cases-preview {
+        margin-top: 3rem;
+        padding-top: 2rem;
+        border-top: 2px solid #f1f5f9;
+    }
+
+    .preview-title {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        color: var(--text-primary);
+        margin-bottom: 1.5rem;
+        font-size: 1.2rem;
+    }
+
+    .cases-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 1rem;
+    }
+
+    .case-card {
+        background: #f8fafc;
+        border-radius: 12px;
+        padding: 1.5rem;
+        border: 2px solid #e2e8f0;
+        transition: all 0.3s ease;
+    }
+
+    .case-card:hover {
+        transform: translateY(-3px);
+        border-color: var(--primary-color);
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+    }
+
+    .case-number {
+        font-weight: 700;
+        color: var(--primary-color);
+        font-size: 1.1rem;
+        margin-bottom: 0.5rem;
+    }
+
+    .case-name {
+        color: var(--text-secondary);
+        font-size: 0.9rem;
+        margin-bottom: 1rem;
+    }
+
+    .case-status {
+        margin-top: 0.5rem;
+    }
+
+    .status-badge {
+        display: inline-block;
+        padding: 0.25rem 0.75rem;
+        border-radius: 20px;
+        font-size: 0.75rem;
+        font-weight: 600;
+    }
+
+    .status-badge.pending {
+        background: rgba(255, 193, 7, 0.15);
+        color: #856404;
+    }
+
+    /* Card Footer */
+    .card-footer {
+        background: #f8fafc;
+        padding: 1.5rem 2.5rem;
+        border-top: 2px solid #e2e8f0;
+    }
+
+    .footer-info {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        color: var(--text-secondary);
+        font-size: 0.875rem;
+    }
+
+    /* Responsive Design */
+    @media (max-width: 768px) {
+        .modern-container {
+            padding: 1rem;
+        }
+        
+        .card-header {
+            flex-direction: column;
+            text-align: center;
+            padding: 1.5rem;
+        }
+        
+        .card-body {
+            padding: 1.5rem;
+        }
+        
+        .form-actions {
+            flex-direction: column;
+        }
+        
+        .cases-grid {
+            grid-template-columns: 1fr;
+        }
+    }
+</style>
+
+{% endblock %}
+
+{% block noneed %}
+{% endblock %}

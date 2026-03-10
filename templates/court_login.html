@@ -1,0 +1,429 @@
+{% extends 'index.html' %}
+
+{% block nav %}
+<div class="container-fluid nav-bar px-0 px-lg-4 py-lg-0">
+    <div class="container">
+        <nav class="navbar navbar-expand-lg navbar-light"> 
+            <a href="{% url 'index' %}" class="navbar-brand p-0">
+                <h1 class="mb-0"><i class="fas fa-shield-alt me-2"></i>ForensicSecure</h1>
+            </a>
+            <!-- Mobile menu toggle (checkbox hack) -->
+            <input type="checkbox" id="navbar-toggler" class="navbar-toggler-checkbox">
+            <label for="navbar-toggler" class="navbar-toggler">
+                <span class="fas fa-bars"></span>
+            </label>
+            <div class="collapse navbar-collapse" id="navbarCollapse">
+                <div class="navbar-nav mx-0 mx-lg-auto">
+                    <a href="{% url 'index' %}" class="nav-item nav-link">Home</a>
+                    
+                    <!-- User Dropdown -->
+                    <div class="nav-item dropdown-container">
+                        <input type="checkbox" id="user-dropdown" class="dropdown-toggle">
+                        <label for="user-dropdown" class="dropdown-label">
+                            <i class="fas fa-user me-1"></i>User
+                        </label>
+                        <div class="dropdown-menu-custom">
+                            <a href="{% url 'user_login' %}" class="dropdown-item-custom">
+                                <i class="fas fa-sign-in-alt me-2"></i>Login
+                            </a>
+                            <a href="{% url 'user_Registration' %}" class="dropdown-item-custom">
+                                <i class="fas fa-user-plus me-2"></i>Register
+                            </a>
+                        </div>
+                    </div>
+                    
+                    <!-- Admin Dropdown -->
+                    <div class="nav-item dropdown-container">
+                        <input type="checkbox" id="admin-dropdown" class="dropdown-toggle">
+                        <label for="admin-dropdown" class="dropdown-label">
+                            <i class="fas fa-lock me-1"></i>Admin
+                        </label>
+                        <div class="dropdown-menu-custom">
+                            <a href="{% url 'admin_login' %}" class="dropdown-item-custom">
+                                <i class="fas fa-sign-in-alt me-2"></i>Login
+                            </a>
+                            
+                        </div>
+                    </div>
+                    
+                    <!-- Court Dropdown -->
+                    <div class="nav-item dropdown-container">
+                        <input type="checkbox" id="court-dropdown" class="dropdown-toggle">
+                        <label for="court-dropdown" class="dropdown-label active">
+                            <i class="fas fa-balance-scale me-1"></i>Court
+                        </label>
+                        <div class="dropdown-menu-custom">
+                            <a href="{% url 'court_login' %}" class="dropdown-item-custom active">
+                                <i class="fas fa-sign-in-alt me-2"></i>Login
+                            </a>
+                            
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </nav>
+    </div>
+</div>
+{% endblock %}
+
+{% block body %}
+<!-- Court Login Form with Blue Theme (Matching Admin) -->
+<div class="container-fluid py-5" style="background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%); min-height: calc(100vh - 80px);">
+    <div class="container">
+        <div class="row justify-content-center align-items-center">
+            <div class="col-lg-6 col-md-8 col-sm-12">
+                <div class="card shadow-lg border-0" style="border-radius: 15px; overflow: hidden; border: 2px solid rgba(59, 130, 246, 0.1); background: white;">
+                    <div class="card-header py-4" style="background: linear-gradient(135deg, rgba(59, 130, 246, 0.9), rgba(6, 182, 212, 0.9));">
+                        <div class="text-center">
+                            <div class="rounded-circle bg-white d-inline-flex align-items-center justify-content-center mb-3 shadow-sm" 
+                                 style="width: 70px; height: 70px; border: 2px solid rgba(255, 255, 255, 0.3);">
+                                <!-- Using Bootstrap Icons for consistency -->
+                                <i class="bi bi-shield-check fa-2x" style="color: var(--accent-blue); height:30px"></i>
+                                <!-- Fallback to Font Awesome if needed -->
+                                <!-- <i class="fas fa-gavel fa-2x" style="color: var(--accent-blue);"></i> -->
+                            </div>
+                            <h3 class="text-white mb-2">COURT OFFICIAL LOGIN</h3>
+                            <p class="text-white opacity-90 mb-0">Secure Access to Judicial Evidence Management</p>
+                        </div>
+                    </div>
+                    <div class="card-body p-5">
+                        
+                        <!-- Court Access Notice -->
+                        <div class="alert alert-light border border-light shadow-sm mb-4" role="alert" style="background: rgba(59, 130, 246, 0.05); border-left: 4px solid var(--accent-blue);">
+                            <div class="d-flex align-items-center">
+                                <div class="rounded-circle bg-white d-flex align-items-center justify-content-center me-3 shadow-sm" 
+                                     style="width: 40px; height: 40px; border: 1px solid rgba(59, 130, 246, 0.2);">
+                                    <i class="fas fa-gavel" style="color: var(--accent-blue);"></i>
+                                </div>
+                                <div>
+                                    <strong class="text-dark" style="color: var(--primary-blue);">Judicial Access Only</strong>
+                                    <p class="text-muted mb-0 small">Authorized court officials and legal personnel</p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Messages -->
+                        {% if msg %}
+                        <div class="alert alert-success alert-dismissible fade show border-start-4 border-success shadow-sm mb-4" role="alert" style="background: rgba(16, 185, 129, 0.05);">
+                            <div class="d-flex align-items-center">
+                                <i class="fas fa-check-circle me-2 text-success"></i>
+                                {{ msg }}
+                            </div>
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+                        {% endif %}
+                        
+                        {% if error %}
+                        <div class="alert alert-danger alert-dismissible fade show border-start-4 border-danger shadow-sm mb-4" role="alert" style="background: rgba(239, 68, 68, 0.05);">
+                            <div class="d-flex align-items-center">
+                                <i class="fas fa-exclamation-circle me-2 text-danger"></i>
+                                {{ error }}
+                            </div>
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+                        {% endif %}
+                        
+                        <!-- Login Form -->
+                        <form method="post" action="{% url 'court_login' %}">
+                            {% csrf_token %}
+                            
+                            <div class="mb-4">
+                                <label for="useremail" class="form-label fw-semibold" style="color: var(--text-dark);">
+                                    <i class="fas fa-user-tie me-2" style="color: var(--accent-blue);"></i>Court Username
+                                </label>
+                                <div class="input-group shadow-sm">
+                                    <span class="input-group-text bg-white border-end-0">
+                                        <i class="fas fa-id-card" style="color: var(--accent-blue);"></i>
+                                    </span>
+                                    <input type="text" class="form-control py-3 border-start-0 bg-light" 
+                                           id="useremail" name="username" 
+                                           placeholder="Enter court username" 
+                                           required
+                                           autocomplete="username"
+                                           style="border-color: var(--border-light);">
+                                </div>
+                                <small class="form-text text-muted mt-1">
+                                    <i class="fas fa-info-circle me-1"></i>
+                                    Use your assigned court credentials
+                                </small>
+                            </div>
+                            
+                            <div class="mb-4">
+                                <label for="userpassword" class="form-label fw-semibold" style="color: var(--text-dark);">
+                                    <i class="fas fa-key me-2" style="color: var(--accent-blue);"></i>Court Password
+                                </label>
+                                <div class="input-group shadow-sm">
+                                    <span class="input-group-text bg-white border-end-0">
+                                        <i class="fas fa-lock" style="color: var(--accent-blue);"></i>
+                                    </span>
+                                    <input type="password" class="form-control py-3 border-start-0 bg-light" 
+                                           id="userpassword" name="password" 
+                                           placeholder="Enter court password" 
+                                           required
+                                           autocomplete="current-password"
+                                           style="border-color: var(--border-light);">
+                                </div>
+                                <small class="form-text text-muted mt-1">
+                                    <i class="fas fa-shield-alt me-1"></i>
+                                    Judicial-grade security
+                                </small>
+                            </div>
+                            
+                            <!-- Legal Compliance Check -->
+                            <div class="mb-4">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" id="legalCompliance" required>
+                                    <label class="form-check-label" for="legalCompliance" style="color: var(--text-dark);">
+                                        <i class="fas fa-scale-balanced me-1" style="color: var(--accent-blue);"></i>
+                                        I confirm I am authorized to access judicial evidence
+                                    </label>
+                                </div>
+                            </div>
+                            
+                            <!-- Submit Button -->
+                            <div class="d-grid gap-2 mb-4">
+                                <button type="submit" class="btn btn-primary btn-lg py-3 fw-bold shadow-sm" 
+                                        style="background: linear-gradient(135deg, var(--accent-blue), var(--accent-teal)); 
+                                               border: none;">
+                                    <i class="fas fa-sign-in-alt me-2"></i>Access Judicial System
+                                </button>
+                            </div>
+                            
+                            <!-- Forgot Password -->
+                            <div class="text-center mb-3">
+                                <a href="{% url 'forgotpass' %}" class="text-decoration-none fw-semibold" 
+                                   style="color: var(--accent-blue);">
+                                    <i class="fas fa-key me-1"></i>Forgot Password?
+                                </a>
+                            </div>
+                        </form>
+                        
+                        <!-- Court Guidelines -->
+                        <div class="border-top pt-4 mt-4">
+                            <h6 class="mb-3" style="color: var(--primary-blue);">
+                                <i class="fas fa-scale-balanced me-2"></i>Judicial Access Guidelines
+                            </h6>
+                            <div class="row g-2">
+                                <div class="col-md-6">
+                                    <div class="d-flex align-items-start mb-2">
+                                        <i class="fas fa-check-circle text-success mt-1 me-2"></i>
+                                        <span style="color: var(--text-light); font-size: 0.9rem;">
+                                            Authorized judicial personnel only
+                                        </span>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="d-flex align-items-start mb-2">
+                                        <i class="fas fa-check-circle text-success mt-1 me-2"></i>
+                                        <span style="color: var(--text-light); font-size: 0.9rem;">
+                                            All access is logged and audited
+                                        </span>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="d-flex align-items-start mb-2">
+                                        <i class="fas fa-check-circle text-success mt-1 me-2"></i>
+                                        <span style="color: var(--text-light); font-size: 0.9rem;">
+                                            Evidence integrity must be maintained
+                                        </span>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="d-flex align-items-start mb-2">
+                                        <i class="fas fa-check-circle text-success mt-1 me-2"></i>
+                                        <span style="color: var(--text-light); font-size: 0.9rem;">
+                                            Chain of custody must be preserved
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                </div>
+                
+                
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Blue Theme Styling (Matching Admin) -->
+<style>
+    /* Light theme specific styling - Same as admin template */
+    .card {
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    
+    .card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08) !important;
+    }
+    
+    /* Alert styling */
+    .alert {
+        border-radius: 10px;
+        border: 1px solid transparent;
+    }
+    
+    .alert-light {
+        background-color: rgba(248, 250, 252, 0.9);
+        border-color: rgba(226, 232, 240, 0.5);
+    }
+    
+    /* Form controls */
+    .form-control {
+        border-radius: 8px;
+        border: 1px solid var(--border-light);
+        background-color: var(--neutral-gray);
+        transition: all 0.3s ease;
+    }
+    
+    .form-control:focus {
+        border-color: var(--accent-blue);
+        box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        background-color: white;
+    }
+    
+    .input-group-text {
+        background-color: white;
+        border-color: var(--border-light);
+    }
+    
+    /* Badges */
+    .badge {
+        font-weight: 500;
+        padding: 0.4em 0.8em;
+        font-size: 0.8em;
+    }
+    
+    /* Checkbox styling */
+    .form-check-input {
+        width: 1.1em;
+        height: 1.1em;
+        margin-top: 0.2em;
+        border: 1px solid var(--border-light);
+        background-color: white;
+    }
+    
+    .form-check-input:checked {
+        background-color: var(--accent-blue);
+        border-color: var(--accent-blue);
+    }
+    
+    .form-check-input:focus {
+        box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        border-color: var(--accent-blue);
+    }
+    
+    /* Button styling */
+    .btn-primary {
+        transition: all 0.3s ease;
+    }
+    
+    .btn-primary:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(59, 130, 246, 0.2) !important;
+    }
+    
+    /* Card header gradient - Same animation as admin */
+    .card-header {
+        position: relative;
+        overflow: hidden;
+    }
+    
+    .card-header::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: linear-gradient(45deg, transparent 30%, rgba(255, 255, 255, 0.1) 50%, transparent 70%);
+        animation: shimmer 3s infinite linear;
+    }
+    
+    @keyframes shimmer {
+        0% { transform: translateX(-100%); }
+        100% { transform: translateX(100%); }
+    }
+    
+    /* Responsive adjustments */
+    @media (max-width: 768px) {
+        .card-body {
+            padding: 2rem !important;
+        }
+        
+        .card-header .rounded-circle {
+            width: 60px !important;
+            height: 60px !important;
+        }
+        
+        .row.g-2 > div {
+            margin-bottom: 0.5rem;
+        }
+    }
+    
+    @media (max-width: 576px) {
+        .card-body {
+            padding: 1.5rem !important;
+        }
+        
+        .btn-lg {
+            padding: 0.75rem 1rem !important;
+            font-size: 1rem;
+        }
+        
+        .security-features .col-md-4 {
+            margin-bottom: 1rem;
+        }
+    }
+    
+    /* List styling */
+    .d-flex.align-items-start {
+        align-items: flex-start;
+    }
+    
+    /* Hover effects for security features */
+    .rounded {
+        transition: all 0.3s ease;
+    }
+    
+    .rounded:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    }
+    
+    /* Court-specific icons - now in blue */
+    .fa-scale-balanced {
+        color: var(--accent-blue);
+    }
+    
+    .fa-gavel {
+        color: var(--accent-blue);
+    }
+    
+    .fa-landmark {
+        color: var(--accent-blue);
+    }
+    
+    .fa-user-tie {
+        color: var(--accent-blue);
+    }
+    
+    .fa-id-card {
+        color: var(--accent-blue);
+    }
+    
+    .fa-file-contract {
+        color: var(--accent-blue);
+    }
+    
+    .fa-file-shield {
+        color: var(--accent-blue);
+    }
+</style>
+{% endblock %}
+
+{% block noneed %}
+{% endblock %}

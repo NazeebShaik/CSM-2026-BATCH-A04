@@ -1,0 +1,78 @@
+{% extends 'index.html' %}
+
+{% block body %}
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>OTP Verification</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<div class="flex items-center justify-center min-h-screen bg-gradient-to-r from-blue-500 to-purple-600">
+  <div class="bg-white p-8 rounded-2xl shadow-xl text-center w-96">
+    <!-- {} -->
+    <h2 class="text-2xl font-bold text-gray-800 mb-4">Enter OTP</h2>
+    <p class="text-gray-500 mb-6">We've sent a 6-digit code to your email</p>
+
+    <!-- OTP Form -->
+    <form action="{% url 'otp' %}" method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+      <div class="flex justify-between space-x-2 mb-6">
+        <input type="tel" name="otp1" maxlength="1" class="otp-input w-12 h-12 text-center text-xl rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-400">
+        <input type="tel" name="otp2" maxlength="1" class="otp-input w-12 h-12 text-center text-xl rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-400">
+        <input type="tel" name="otp3" maxlength="1" class="otp-input w-12 h-12 text-center text-xl rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-400">
+        <input type="tel" name="otp4" maxlength="1" class="otp-input w-12 h-12 text-center text-xl rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-400">
+        <input type="tel" name="otp5" maxlength="1" class="otp-input w-12 h-12 text-center text-xl rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-400">
+        <input type="tel" name="otp6" maxlength="1" class="otp-input w-12 h-12 text-center text-xl rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-400">
+      </div>
+      <button type="submit" class="mt-6 w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 transition duration-300">Verify</button>
+    </form>
+  </div>
+</div>
+
+<script>
+  const inputs = document.querySelectorAll('.otp-input');
+
+  // Move focus to next input
+  inputs.forEach((input, index) => {
+    input.addEventListener('input', () => {
+      if (input.value.length === 1 && index < inputs.length - 1) {
+        inputs[index + 1].focus();
+      }
+    });
+    
+    // Move focus back to previous input if backspace is pressed
+    input.addEventListener('keydown', (e) => {
+      if (e.key === 'Backspace' && input.value === '' && index > 0) {
+        inputs[index - 1].focus();
+      }
+    });
+  });
+
+  // Submit OTP function to be called on form submission
+  function submitOTP(event) {
+    event.preventDefault(); // Prevent the default form submission
+
+    let otp = '';
+    inputs.forEach(input => {
+      otp += input.value;
+    });
+
+    // Check if OTP is complete
+    if (otp.length === 6) {
+      console.log('OTP entered:', otp);
+      
+      // Call your function to handle OTP (like sending it to the backend)
+      // Example function call: verifyOTP(otp);
+      
+      // For example: 
+       fetch('/otp', { method: 'POST', body: JSON.stringify({ otp }) })
+       .then(response => response.json())
+       .then(data => { console.log(data); })
+       .catch(error => console.error(error));
+    } else {
+      alert('Please enter a complete 6-digit OTP');
+    }
+  }
+</script>
+{% endblock %}

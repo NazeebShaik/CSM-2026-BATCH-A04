@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reset Password</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .container {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            max-width: 400px;
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        h2 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 20px;
+        }
+
+        form {
+            margin-top: 20px;
+        }
+
+        input[type="password"] ,[type="email"]  {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-sizing: border-box;
+            font-size: 16px;
+        }
+
+        input[type="submit"]{
+            background-color: #4caf50;
+            color: #fff;
+            border: none;
+            padding: 12px 20px;
+            cursor: pointer;
+            border-radius: 5px;
+            width: 100%;
+            font-size: 16px;
+        }
+
+        input[type="submit"]:hover {
+            background-color: #45a049;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        {% if messages %}
+                    
+        {% for message in messages %}
+            <li>
+                <span>{{ message }}</span>
+                <button class="close-btn" onclick="closeMessage(this)">X</button>
+            </li>
+        {% endfor %}
+  
+{% endif %}
+        <h2>Reset Password</h2>
+        <form action="{% url 'update_pass' %}" method="post">
+            {% csrf_token %}
+            <input type="email" name="Email" placeholder="Enter Email" required>
+            <input type="password" name="password" placeholder="New Password" required>
+            <input type="password" name="confirm_password" placeholder="Confirm New Password" required>
+            <input type="submit" value="Reset Password">
+        </form>
+    </div>
+    <script>
+        function closeMessage(btn) {
+            btn.parentNode.style.display = 'none'; // Hide the parent <li> element
+        }
+    </script>
+</body>
+</html>

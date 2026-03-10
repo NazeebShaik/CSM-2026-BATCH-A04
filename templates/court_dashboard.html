@@ -1,0 +1,83 @@
+{% extends 'index.html' %}
+
+{% block nav %}
+<div class="container-fluid nav-bar px-0 px-lg-4 py-lg-0">
+    <div class="container">
+        <nav class="navbar navbar-expand-lg navbar-light">
+
+            <!-- LOGO -->
+            <a href="{% url 'court_dashboard' %}" class="navbar-brand p-0">
+                <h1 class="mb-0">
+                    <i class="fas fa-balance-scale me-2"></i>Forensic Security
+                </h1>
+            </a>
+
+            <!-- MOBILE TOGGLE -->
+            <input type="checkbox" id="navbar-toggler" class="navbar-toggler-checkbox">
+            <label for="navbar-toggler" class="navbar-toggler">
+                <span class="fas fa-bars"></span>
+            </label>
+
+            <!-- NAV ITEMS -->
+            <div class="collapse navbar-collapse" id="navbarCollapse">
+                <div class="navbar-nav mx-0 mx-lg-auto">
+
+                    <!-- HOME -->
+                    <a href="{% url 'court_dashboard' %}" class="nav-item nav-link active">
+                        <i class="fas fa-home me-1"></i> Home
+                    </a>
+
+                    <!-- EVIDENCE DROPDOWN -->
+                    <div class="nav-item dropdown-container">
+                        <input type="checkbox" id="court-evidence-dropdown" class="dropdown-toggle">
+                        <label for="court-evidence-dropdown" class="dropdown-label">
+                            <i class="fas fa-folder-open me-1"></i> Evidence
+                        </label>
+
+                        <div class="dropdown-menu-custom">
+                            <a href="{% url 'send_evidence_req' %}" class="dropdown-item-custom">
+                                <i class="fas fa-paper-plane me-2"></i> Evidence Request
+                            </a>
+                            <a href="{% url 'Court_Response' %}" class="dropdown-item-custom">
+                                <i class="fas fa-eye me-2"></i> View Response
+                            </a>
+                        </div>
+                    </div>
+
+                    <!-- LOGOUT -->
+                    <a href="{% url 'court_login' %}" class="nav-item nav-link text-danger">
+                        <i class="fas fa-sign-out-alt me-1"></i> Logout
+                    </a>
+
+                </div>
+            </div>
+        </nav>
+    </div>
+</div>
+{% endblock %}
+
+
+
+{% block body %}
+        <!-- Carousel Start -->
+        <div class="header-carousel owl-carousel">
+            <div class="header-carousel-item bg-primary">
+                <div class="carousel-caption">
+                    <div class="container">
+                        <div class="row g-4 align-items-center">
+                            <div class="col-lg-7 animated fadeInLeft">
+                                <div class="text-sm-center text-md-start">
+                                    <h4 class="display-2 text-white mb-4">Welcome 'Court' </h4>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Carousel End -->
+
+{% endblock %}
+
+{% block noneed %}
+{% endblock %}

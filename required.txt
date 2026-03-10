@@ -1,0 +1,10 @@
+Django
+cryptography
+tenseal
+numpy
+pandas
+PyPDF2
+pdfplumber
+python-docx
+pycryptodome
+Pillow

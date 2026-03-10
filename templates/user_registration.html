@@ -1,0 +1,490 @@
+{% extends 'index.html' %}
+
+{% block nav %}
+<div class="container-fluid nav-bar px-0 px-lg-4 py-lg-0">
+    <div class="container">
+        <nav class="navbar navbar-expand-lg navbar-light"> 
+            <a href="{% url 'index' %}" class="navbar-brand p-0">
+                <h1 class="mb-0"><i class="fas fa-shield-alt me-2"></i>ForensicSecure</h1>
+            </a>
+            <!-- Mobile menu toggle (checkbox hack) -->
+            <input type="checkbox" id="navbar-toggler" class="navbar-toggler-checkbox">
+            <label for="navbar-toggler" class="navbar-toggler">
+                <span class="fas fa-bars"></span>
+            </label>
+            <div class="collapse navbar-collapse" id="navbarCollapse">
+                <div class="navbar-nav mx-0 mx-lg-auto">
+                    <a href="{% url 'index' %}" class="nav-item nav-link">Home</a>
+                    
+                    <!-- User Dropdown -->
+                    <div class="nav-item dropdown-container">
+                        <input type="checkbox" id="user-dropdown" class="dropdown-toggle">
+                        <label for="user-dropdown" class="dropdown-label active">
+                            <i class="fas fa-user me-1"></i>User
+                        </label>
+                        <div class="dropdown-menu-custom">
+                            <a href="{% url 'user_login' %}" class="dropdown-item-custom">
+                                <i class="fas fa-sign-in-alt me-2"></i>Login
+                            </a>
+                            <a href="{% url 'user_Registration' %}" class="dropdown-item-custom active">
+                                <i class="fas fa-user-plus me-2"></i>Register
+                            </a>
+                        </div>
+                    </div>
+                    
+                    <!-- Admin Dropdown -->
+                    <div class="nav-item dropdown-container">
+                        <input type="checkbox" id="admin-dropdown" class="dropdown-toggle">
+                        <label for="admin-dropdown" class="dropdown-label">
+                            <i class="fas fa-lock me-1"></i>Admin
+                        </label>
+                        <div class="dropdown-menu-custom">
+                            <a href="{% url 'admin_login' %}" class="dropdown-item-custom">
+                                <i class="fas fa-sign-in-alt me-2"></i>Login
+                            </a>
+                            
+                        </div>
+                    </div>
+                    
+                    <!-- Court Dropdown -->
+                    <div class="nav-item dropdown-container">
+                        <input type="checkbox" id="court-dropdown" class="dropdown-toggle">
+                        <label for="court-dropdown" class="dropdown-label">
+                            <i class="fas fa-balance-scale me-1"></i>Court
+                        </label>
+                        <div class="dropdown-menu-custom">
+                            <a href="{% url 'court_login' %}" class="dropdown-item-custom">
+                                <i class="fas fa-sign-in-alt me-2"></i>Login
+                            </a>
+                            
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </nav>
+    </div>
+</div>
+{% endblock %}
+
+{% block body %}
+<!-- User Registration Form with Theme Styling -->
+<div class="container-fluid py-5" style="background: linear-gradient(135deg, var(--primary-dark) 0%, #1e3a8a 100%); min-height: calc(100vh - 80px);">
+    <div class="container">
+        <div class="row justify-content-center align-items-center">
+            <div class="col-lg-8 col-md-10 col-sm-12">
+                <div class="card shadow-lg border-0" style="border-radius: 15px; overflow: hidden;">
+                    <div class="card-header py-4" style="background: linear-gradient(135deg, var(--accent-blue), var(--accent-teal));">
+                        <h3 class="text-center text-white mb-0">
+                            <i class="fas fa-user-plus me-2"></i>CREATE YOUR ACCOUNT
+                        </h3>
+                        <p class="text-center text-white mb-0 opacity-75 mt-2">
+                            Join ForensicSecure for secure digital evidence management
+                        </p>
+                    </div>
+                    <div class="card-body p-5">
+                        {% if msg %}
+                        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                            <i class="fas fa-exclamation-triangle me-2"></i>{{ msg }}
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+                        {% endif %}
+                        
+                        <form method="post" action="{% url 'user_Registration' %}" enctype="multipart/form-data" class="mt-3" id="registrationForm">
+                            {% csrf_token %}
+                            
+                            <div class="row g-4">
+                                <!-- Personal Information -->
+                                <div class="col-12">
+                                    <h5 class="mb-3" style="color: var(--primary-blue);">
+                                        <i class="fas fa-id-card me-2"></i>Personal Information
+                                    </h5>
+                                </div>
+                                
+                                <div class="col-md-6">
+                                    <div class="mb-3">
+                                        <label for="username" class="form-label fw-semibold" style="color: var(--text-dark);">
+                                            <i class="fas fa-user me-2"></i>Full Name
+                                        </label>
+                                        <div class="input-group">
+                                            <span class="input-group-text bg-light border-end-0">
+                                                <i class="fas fa-user" style="color: var(--accent-blue);"></i>
+                                            </span>
+                                            <input type="text" class="form-control py-3 border-start-0" 
+                                                   id="username" name="username" 
+                                                   placeholder="Enter your full name" required>
+                                        </div>
+                                        <small class="form-text text-muted">Your legal name as it appears on official documents</small>
+                                    </div>
+                                </div>
+                                
+                                <div class="col-md-6">
+                                    <div class="mb-3">
+                                        <label for="useremail" class="form-label fw-semibold" style="color: var(--text-dark);">
+                                            <i class="fas fa-envelope me-2"></i>Email Address
+                                        </label>
+                                        <div class="input-group">
+                                            <span class="input-group-text bg-light border-end-0">
+                                                <i class="fas fa-at" style="color: var(--accent-blue);"></i>
+                                            </span>
+                                            <input type="email" class="form-control py-3 border-start-0" 
+                                                   id="useremail" name="useremail" 
+                                                   placeholder="Enter your email address" required>
+                                        </div>
+                                        <small class="form-text text-muted">We'll send verification to this email</small>
+                                    </div>
+                                </div>
+                                
+                                <!-- Contact Information -->
+                                <div class="col-12 mt-2">
+                                    <h5 class="mb-3" style="color: var(--primary-blue);">
+                                        <i class="fas fa-address-book me-2"></i>Contact Information
+                                    </h5>
+                                </div>
+                                
+                                <div class="col-md-6">
+                                    <div class="mb-3">
+                                        <label for="userphone" class="form-label fw-semibold" style="color: var(--text-dark);">
+                                            <i class="fas fa-phone me-2"></i>Phone Number
+                                        </label>
+                                        <div class="input-group">
+                                            <span class="input-group-text bg-light border-end-0">
+                                                <i class="fas fa-mobile-alt" style="color: var(--accent-blue);"></i>
+                                            </span>
+                                            <input type="text" class="form-control py-3 border-start-0" 
+                                                   id="userphone" name="userphone" 
+                                                   placeholder="Enter phone number" required
+                                                   pattern="[0-9]{10,15}" title="Enter a valid phone number">
+                                        </div>
+                                        <small class="form-text text-muted">10-15 digits without spaces or dashes</small>
+                                    </div>
+                                </div>
+                                
+                                <div class="col-md-6">
+                                    <div class="mb-3">
+                                        <label for="useraddress" class="form-label fw-semibold" style="color: var(--text-dark);">
+                                            <i class="fas fa-map-marker-alt me-2"></i>Address
+                                        </label>
+                                        <div class="input-group">
+                                            <span class="input-group-text bg-light border-end-0">
+                                                <i class="fas fa-home" style="color: var(--accent-blue);"></i>
+                                            </span>
+                                            <input type="text" class="form-control py-3 border-start-0" 
+                                                   id="useraddress" name="useraddress" 
+                                                   placeholder="Enter your complete address" required>
+                                        </div>
+                                        <small class="form-text text-muted">Full physical address for verification</small>
+                                    </div>
+                                </div>
+                                
+                                <!-- Security Information -->
+                                <div class="col-12 mt-2">
+                                    <h5 class="mb-3" style="color: var(--primary-blue);">
+                                        <i class="fas fa-lock me-2"></i>Security Information
+                                    </h5>
+                                </div>
+                                
+                                <div class="col-md-6">
+                                    <div class="mb-3">
+                                        <label for="userpassword" class="form-label fw-semibold" style="color: var(--text-dark);">
+                                            <i class="fas fa-key me-2"></i>Password
+                                        </label>
+                                        <div class="input-group">
+                                            <span class="input-group-text bg-light border-end-0">
+                                                <i class="fas fa-lock" style="color: var(--accent-blue);"></i>
+                                            </span>
+                                            <input type="password" class="form-control py-3 border-start-0" 
+                                                   id="userpassword" name="userpassword" 
+                                                   placeholder="Create a strong password" required
+                                                   pattern="^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$"
+                                                   title="Minimum 8 characters with letters, numbers, and special characters">
+                                            <button class="btn btn-outline-secondary" type="button" id="togglePassword1">
+                                                <i class="fas fa-eye"></i>
+                                            </button>
+                                        </div>
+                                        <div class="password-strength mt-2">
+                                            <small class="text-muted">Password Strength: </small>
+                                            <div class="progress" style="height: 5px;">
+                                                <div class="progress-bar" id="passwordStrength" style="width: 0%;"></div>
+                                            </div>
+                                            <small class="form-text text-muted">
+                                                Must contain at least 8 characters with letters, numbers, and special characters
+                                            </small>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="col-md-6">
+                                    <div class="mb-3">
+                                        <label for="confirmpassword" class="form-label fw-semibold" style="color: var(--text-dark);">
+                                            <i class="fas fa-key me-2"></i>Confirm Password
+                                        </label>
+                                        <div class="input-group">
+                                            <span class="input-group-text bg-light border-end-0">
+                                                <i class="fas fa-lock" style="color: var(--accent-blue);"></i>
+                                            </span>
+                                            <input type="password" class="form-control py-3 border-start-0" 
+                                                   id="confirmpassword" name="confirmpassword" 
+                                                   placeholder="Re-enter your password" required>
+                                            <button class="btn btn-outline-secondary" type="button" id="togglePassword2">
+                                                <i class="fas fa-eye"></i>
+                                            </button>
+                                        </div>
+                                        <div class="password-match mt-2">
+                                            <small id="passwordMatchMessage" class="text-muted"></small>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <!-- Terms and Conditions -->
+                                <div class="col-12">
+                                    <div class="form-check mb-4">
+                                        <input class="form-check-input" type="checkbox" id="termsCheck" required>
+                                        <label class="form-check-label" for="termsCheck" style="color: var(--text-dark);">
+                                            I agree to the 
+                                            <a href="#" class="text-decoration-none" style="color: var(--accent-teal);">
+                                                Terms of Service
+                                            </a> 
+                                            and 
+                                            <a href="#" class="text-decoration-none" style="color: var(--accent-teal);">
+                                                Privacy Policy
+                                            </a>
+                                            <span class="text-danger">*</span>
+                                        </label>
+                                    </div>
+                                </div>
+                                
+                                <!-- Submit Button -->
+                                <div class="col-12">
+                                    <div class="d-grid gap-2">
+                                        <button type="submit" class="btn btn-primary btn-lg py-3 fw-bold" 
+                                                style="background: linear-gradient(135deg, var(--accent-blue), var(--accent-teal)); 
+                                                       border: none;">
+                                            <i class="fas fa-user-plus me-2"></i>Create Account
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                        
+                        <div class="text-center pt-4 border-top mt-4">
+                            <p class="mb-0" style="color: var(--text-light);">
+                                Already have an account? 
+                                <a href="{% url 'user_login' %}" class="fw-bold text-decoration-none" 
+                                   style="color: var(--accent-teal);">
+                                    Sign In Here
+                                </a>
+                            </p>
+                        </div>
+                    </div>
+                    <div class="card-footer text-center py-3" style="background-color: rgba(0,0,0,0.02);">
+                        <small class="text-muted">
+                            <i class="fas fa-shield-alt me-1"></i>
+                            All data is encrypted and stored securely
+                        </small>
+                    </div>
+                </div>
+                
+                
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Registration Form JavaScript -->
+<style>
+    /* Password strength indicator */
+    .progress {
+        background-color: var(--border-light);
+        border-radius: 3px;
+    }
+    
+    .progress-bar {
+        background: linear-gradient(90deg, var(--danger), var(--warning), var(--success));
+        border-radius: 3px;
+        transition: width 0.3s ease;
+    }
+    
+    /* Form validation styling */
+    .form-control.is-valid {
+        border-color: var(--success);
+        background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 8 8'%3e%3cpath fill='%2310b981' d='M2.3 6.73L.6 4.53c-.4-1.04.46-1.4 1.1-.8l1.1 1.4 3.4-3.8c.6-.63 1.6-.27 1.2.7l-4 4.6c-.43.5-.8.4-1.1.1z'/%3e%3c/svg%3e");
+    }
+    
+    .form-control.is-invalid {
+        border-color: var(--danger);
+        background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12' width='12' height='12' fill='none' stroke='%23ef4444'%3e%3ccircle cx='6' cy='6' r='4.5'/%3e%3cpath stroke-linejoin='round' d='M5.8 3.6h.4L6 6.5z'/%3e%3ccircle cx='6' cy='8.2' r='.6' fill='%23ef4444' stroke='none'/%3e%3c/svg%3e");
+    }
+    
+    /* Checkbox styling */
+    .form-check-input:checked {
+        background-color: var(--accent-blue);
+        border-color: var(--accent-blue);
+    }
+    
+    /* Benefits icons */
+    .rounded-circle {
+        transition: transform 0.3s ease;
+    }
+    
+    .rounded-circle:hover {
+        transform: scale(1.1);
+    }
+</style>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Password toggle functionality
+        function setupPasswordToggle(toggleId, inputId) {
+            const toggleBtn = document.getElementById(toggleId);
+            const passwordInput = document.getElementById(inputId);
+            
+            if (toggleBtn && passwordInput) {
+                toggleBtn.addEventListener('click', function() {
+                    const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+                    passwordInput.setAttribute('type', type);
+                    
+                    const icon = this.querySelector('i');
+                    if (type === 'password') {
+                        icon.classList.remove('fa-eye-slash');
+                        icon.classList.add('fa-eye');
+                    } else {
+                        icon.classList.remove('fa-eye');
+                        icon.classList.add('fa-eye-slash');
+                    }
+                });
+            }
+        }
+        
+        // Setup both password toggles
+        setupPasswordToggle('togglePassword1', 'userpassword');
+        setupPasswordToggle('togglePassword2', 'confirmpassword');
+        
+        // Password strength indicator
+        const passwordInput = document.getElementById('userpassword');
+        const passwordStrength = document.getElementById('passwordStrength');
+        const confirmPassword = document.getElementById('confirmpassword');
+        const passwordMatchMessage = document.getElementById('passwordMatchMessage');
+        
+        function checkPasswordStrength(password) {
+            let strength = 0;
+            
+            // Length check
+            if (password.length >= 8) strength += 25;
+            if (password.length >= 12) strength += 10;
+            
+            // Complexity checks
+            if (/[A-Z]/.test(password)) strength += 20;
+            if (/[a-z]/.test(password)) strength += 20;
+            if (/[0-9]/.test(password)) strength += 20;
+            if (/[^A-Za-z0-9]/.test(password)) strength += 25;
+            
+            // Update progress bar
+            passwordStrength.style.width = Math.min(strength, 100) + '%';
+            
+            // Update color based on strength
+            if (strength < 40) {
+                passwordStrength.style.backgroundColor = var('--danger');
+            } else if (strength < 70) {
+                passwordStrength.style.backgroundColor = var('--warning');
+            } else {
+                passwordStrength.style.backgroundColor = var('--success');
+            }
+        }
+        
+        function checkPasswordMatch() {
+            const password = passwordInput.value;
+            const confirm = confirmPassword.value;
+            
+            if (!password || !confirm) {
+                passwordMatchMessage.textContent = '';
+                passwordMatchMessage.className = 'text-muted';
+                return;
+            }
+            
+            if (password === confirm) {
+                passwordMatchMessage.textContent = '✓ Passwords match';
+                passwordMatchMessage.className = 'text-success';
+                confirmPassword.classList.remove('is-invalid');
+                confirmPassword.classList.add('is-valid');
+            } else {
+                passwordMatchMessage.textContent = '✗ Passwords do not match';
+                passwordMatchMessage.className = 'text-danger';
+                confirmPassword.classList.remove('is-valid');
+                confirmPassword.classList.add('is-invalid');
+            }
+        }
+        
+        if (passwordInput) {
+            passwordInput.addEventListener('input', function() {
+                checkPasswordStrength(this.value);
+                checkPasswordMatch();
+            });
+        }
+        
+        if (confirmPassword) {
+            confirmPassword.addEventListener('input', checkPasswordMatch);
+        }
+        
+        // Phone number validation
+        const phoneInput = document.getElementById('userphone');
+        if (phoneInput) {
+            phoneInput.addEventListener('input', function() {
+                const phone = this.value.replace(/\D/g, '');
+                this.value = phone;
+                
+                if (phone.length >= 10 && phone.length <= 15) {
+                    this.classList.remove('is-invalid');
+                    this.classList.add('is-valid');
+                } else {
+                    this.classList.remove('is-valid');
+                    this.classList.add('is-invalid');
+                }
+            });
+        }
+        
+        // Form submission validation
+        const form = document.getElementById('registrationForm');
+        if (form) {
+            form.addEventListener('submit', function(e) {
+                const password = passwordInput.value;
+                const confirm = confirmPassword.value;
+                const terms = document.getElementById('termsCheck').checked;
+                
+                if (password !== confirm) {
+                    e.preventDefault();
+                    alert('Passwords do not match. Please check and try again.');
+                    return;
+                }
+                
+                if (!terms) {
+                    e.preventDefault();
+                    alert('You must agree to the Terms of Service and Privacy Policy.');
+                    return;
+                }
+                
+                // Validate password strength
+                const strongPassword = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/;
+                if (!strongPassword.test(password)) {
+                    e.preventDefault();
+                    alert('Password must be at least 8 characters long and contain letters, numbers, and special characters.');
+                    return;
+                }
+            });
+        }
+    });
+    
+    // CSS variables for JavaScript
+    const style = getComputedStyle(document.documentElement);
+    const getCssVar = (name) => style.getPropertyValue(name).trim();
+    
+    // Make CSS variables available globally
+    const cssVars = {
+        '--danger': getCssVar('--danger'),
+        '--warning': getCssVar('--warning'),
+        '--success': getCssVar('--success')
+    };
+</script>
+{% endblock %}
+
+{% block noneed %}
+{% endblock %}

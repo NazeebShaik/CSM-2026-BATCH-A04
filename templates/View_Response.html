@@ -1,0 +1,91 @@
+{% extends 'user_home.html' %}
+
+{% block body %}
+        <!-- Carousel Start -->
+        <div class="header-carousel owl-carousel">
+            <div class="header-carousel-item bg-primary">
+                <div class="carousel-caption">
+                    <div class="container">
+                        <div class="row g-4 align-items-center">
+                            <div class="col-lg-7 animated fadeInLeft">
+                                <div class="text-sm-center text-md-start">
+                                    <div class="hero-wrap ftco-degree-bg" style="background-image: url('/static/images/bg_1.jpg');" data-stellar-background-ratio="0.5">
+                                        <div class="overlay"></div>
+                                        <div class="container">
+                                            <div class="row no-gutters slider-text justify-content-center align-items-center" style="padding-top: 121px;width: 110px;">
+                                                <div class="col-lg-8 ftco-animate">
+                                                    <div class="text w-100 text-center mb-md-5 pb-md-5">
+                                                        <div class="container">
+                                                            <div class="row centered-form">
+                                                                <div class="col-xs-12 col-sm-8 col-md-6 col-sm-offset-2 col-md-offset-3">
+                                                                    <div class="panel panel-default">
+                                                                        <table class="table">
+                                                                            <thead>
+                                                                                <tr>
+                                                                                    <th scope="col" style="color: aliceblue;">Useremail</th>
+                                                                                    <th scope="col" style="color: aliceblue;">Username</th>
+                                                                                    <th scope="col" style="color: aliceblue;">Filename</th>
+                                                                                    <th scope="col" style="color: aliceblue;">status</th>
+                                                                                    <th scope="col" style="color: aliceblue;">Action</th>
+                                                                                </tr>
+                                                                            </thead>
+                                                                            <tbody>
+                                                                                {% for user in page_obj %}
+                                                                                <tr>
+                                                                                    <td style="color: aliceblue;">{{ user.owneremail }}</td>
+                                                                                    <td style="color: aliceblue;">{{ user.ownername }}</td>
+                                                                                    <td style="color: aliceblue;">{{ user.filename }}</td>
+                                                                                    <td style="color: aliceblue;">{{ user.status }}</td>
+                                                                                    <td>
+                                                                                        <a href="{% url 'decrypt_file' %}" class="btn btn-success">Decrypt</a>
+                                                                                    </td>
+                                                                                </tr>
+                                                                                {% endfor %}
+                                                                            </tbody>
+                                                                        </table>
+                                    
+                                                                        <!-- Pagination Controls -->
+                                                                        <nav aria-label="Page navigation">
+                                                                            <ul class="pagination">
+                                                                                {% if page_obj.has_previous %}
+                                                                                <li class="page-item">
+                                                                                    <a class="page-link" href="?page={{ page_obj.previous_page_number }}" aria-label="Previous">
+                                                                                        <span aria-hidden="true">&laquo;</span>
+                                                                                    </a>
+                                                                                </li>
+                                                                                {% endif %}
+                                    
+                                                                                {% for num in page_obj.paginator.page_range %}
+                                                                                <li class="page-item {% if page_obj.number == num %}active{% endif %}">
+                                                                                    <a class="page-link" href="?page={{ num }}">{{ num }}</a>
+                                                                                </li>
+                                                                                {% endfor %}
+                                    
+                                                                                {% if page_obj.has_next %}
+                                                                                <li class="page-item">
+                                                                                    <a class="page-link" href="?page={{ page_obj.next_page_number }}" aria-label="Next">
+                                                                                        <span aria-hidden="true">&raquo;</span>
+                                                                                    </a>
+                                                                                </li>
+                                                                                {% endif %}
+                                                                            </ul>
+                                                                        </nav>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Carousel End -->
+
+{% endblock %}  

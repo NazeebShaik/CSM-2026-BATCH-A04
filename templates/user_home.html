@@ -1,0 +1,102 @@
+{% extends 'index.html' %}
+
+{% block nav %}
+<div class="container-fluid nav-bar px-0 px-lg-4 py-lg-0">
+    <div class="container">
+        <nav class="navbar navbar-expand-lg navbar-light">
+
+            <!-- LOGO -->
+            <a href="{% url 'user_home' %}" class="navbar-brand p-0">
+                <h1 class="mb-0">
+                    Forensic Security
+                </h1>
+            </a>
+
+            <!-- MOBILE TOGGLE -->
+            <input type="checkbox" id="navbar-toggler" class="navbar-toggler-checkbox">
+            <label for="navbar-toggler" class="navbar-toggler">
+                <span class="fas fa-bars"></span>
+            </label>
+
+            <!-- NAV ITEMS -->
+            <div class="collapse navbar-collapse" id="navbarCollapse">
+                <div class="navbar-nav mx-0 mx-lg-auto">
+
+                    <!-- HOME -->
+                    <a href="{% url 'user_home' %}" class="nav-item nav-link active">
+                         Home
+                    </a>
+
+                    <!-- EVIDENCE DATA -->
+                    <div class="nav-item dropdown-container">
+                        <input type="checkbox" id="evidence-dropdown" class="dropdown-toggle">
+                        <label for="evidence-dropdown" class="dropdown-label">
+                             Evidence Data
+                        </label>
+
+                        <div class="dropdown-menu-custom">
+                            <a href="{% url 'Upload_Files' %}" class="dropdown-item-custom">
+                                 Upload Evidence
+                            </a>
+                            <a href="{% url 'View_Encrypted' %}" class="dropdown-item-custom">
+                                 View Evidence
+                            </a>
+                        </div>
+                    </div>
+
+                    <!-- CHECK EVIDENCE -->
+                    <a href="{% url 'check_evidence' %}" class="nav-item nav-link">
+                         Check Evidence
+                    </a>
+
+                    <!-- EVIDENCE RESPONSE -->
+                    <div class="nav-item dropdown-container">
+                        <input type="checkbox" id="response-dropdown" class="dropdown-toggle">
+                        <label for="response-dropdown" class="dropdown-label">
+                             Evidence Response
+                        </label>
+
+                        <div class="dropdown-menu-custom">
+                            <a href="{% url 'Court_Request' %}" class="dropdown-item-custom">
+                                 Court Request
+                            </a>
+                        </div>
+                    </div>
+
+                    <!-- LOGOUT -->
+                    <a href="{% url 'user_login' %}" class="nav-item nav-link text-danger">
+                        <i class="fas fa-sign-out-alt me-1"></i> Logout
+                    </a>
+
+                </div>
+            </div>
+        </nav>
+    </div>
+</div>
+{% endblock %}
+
+
+
+{% block body %}
+        <!-- Carousel Start -->
+        <div class="header-carousel owl-carousel">
+            <div class="header-carousel-item bg-primary">
+                <div class="carousel-caption">
+                    <div class="container">
+                        <div class="row g-4 align-items-center">
+                            <div class="col-lg-7 animated fadeInLeft">
+                                <div class="text-sm-center text-md-start">
+                                    <h4 class="display-2 text-white mb-4">Welcome '{{username}}' </h4>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Carousel End -->
+
+{% endblock %}
+
+{% block noneed %}
+{% endblock %}

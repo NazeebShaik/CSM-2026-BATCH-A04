@@ -1,0 +1,738 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <title>Digital Forensic Security</title>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <meta content="" name="keywords">
+    <meta content="" name="description">
+
+    <!-- Google Web Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Roboto+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+
+    <!-- Icon Font Stylesheet -->
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.4//static/css/all.css"/>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.1/font/bootstrap-icons.css" rel="stylesheet">
+
+    <!-- Libraries Stylesheet -->
+    <link rel="stylesheet" href="/static/lib/animate/animate.min.css"/>
+    <link href="/static/lib/lightbox//static/css/lightbox.min.css" rel="stylesheet">
+    <link href="/static/lib/owlcarousel/assets/owl.carousel.min.css" rel="stylesheet">
+
+    <!-- Customized Bootstrap Stylesheet -->
+    <link href="/static/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Template Stylesheet -->
+    <style>
+        :root {
+            --primary-dark: #0a192f;
+            --primary-blue: #1e40af;
+            --accent-blue: #3b82f6;
+            --accent-teal: #06b6d4;
+            --neutral-gray: #f8fafc;
+            --text-dark: #1e293b;
+            --text-light: #64748b;
+            --border-light: #e2e8f0;
+            --card-bg: #ffffff;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            color: var(--text-dark);
+            background-color: var(--neutral-gray);
+            line-height: 1.6;
+        }
+        
+        h1, h2, h3, h4, h5, h6 {
+            font-weight: 700;
+            line-height: 1.2;
+        }
+        
+        .navbar-brand h1 {
+            font-family: 'Roboto Mono', monospace;
+            font-weight: 700;
+            font-size: 1.8rem;
+            background: linear-gradient(90deg, var(--accent-blue), var(--accent-teal));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        /* Navbar Styles */
+        .nav-bar {
+            background-color: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+            border-bottom: 1px solid var(--border-light);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+        
+        /* Pure CSS Dropdown Fix */
+        .navbar-nav {
+            position: relative;
+        }
+        
+        .nav-item {
+            position: relative;
+        }
+        
+        .nav-link {
+            color: var(--text-dark) !important;
+            font-weight: 500;
+            padding: 0.5rem 1rem !important;
+            margin: 0 0.2rem;
+            border-radius: 6px;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+        }
+        
+        .nav-link:hover, .nav-link.active {
+            color: var(--accent-blue) !important;
+            background-color: rgba(59, 130, 246, 0.05);
+        }
+        
+        /* Dropdown Container */
+        .dropdown-container {
+            position: relative;
+            display: inline-block;
+        }
+        
+        /* Hide checkbox */
+        .dropdown-toggle {
+            display: none;
+        }
+        
+        /* Dropdown label (replaces the link) */
+        .dropdown-label {
+            cursor: pointer;
+            color: var(--text-dark);
+            font-weight: 500;
+            padding: 0.5rem 1rem;
+            margin: 0 0.2rem;
+            border-radius: 6px;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+        }
+        
+        .dropdown-label:hover, 
+        .dropdown-container:hover .dropdown-label {
+            color: var(--accent-blue);
+            background-color: rgba(59, 130, 246, 0.05);
+        }
+        
+        /* Dropdown menu */
+        .dropdown-menu-custom {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            min-width: 200px;
+            background: white;
+            border: 1px solid var(--border-light);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+            border-radius: 8px;
+            padding: 0.5rem 0;
+            margin-top: 0.5rem;
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(-10px);
+            transition: all 0.3s ease;
+            z-index: 1000;
+        }
+        
+        /* Show dropdown on hover */
+        .dropdown-container:hover .dropdown-menu-custom {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+        
+        /* Mobile dropdown */
+        @media (max-width: 991px) {
+            .dropdown-container {
+                width: 100%;
+            }
+            
+            .dropdown-label {
+                display: block;
+                width: 100%;
+                text-align: left;
+            }
+            
+            .dropdown-menu-custom {
+                position: static;
+                opacity: 1;
+                visibility: visible;
+                transform: none;
+                box-shadow: none;
+                border: none;
+                padding-left: 1.5rem;
+                display: none;
+                background: rgba(59, 130, 246, 0.02);
+            }
+            
+            /* Show mobile dropdown when checkbox is checked */
+            .dropdown-toggle:checked ~ .dropdown-menu-custom {
+                display: block;
+            }
+            
+            .dropdown-label::after {
+                content: '+';
+                float: right;
+                transition: transform 0.3s ease;
+            }
+            
+            .dropdown-toggle:checked + .dropdown-label::after {
+                content: '-';
+            }
+        }
+        
+        .dropdown-item-custom {
+            padding: 0.6rem 1.5rem;
+            color: var(--text-dark);
+            font-weight: 500;
+            transition: all 0.2s ease;
+            text-decoration: none;
+            display: block;
+            white-space: nowrap;
+        }
+        
+        .dropdown-item-custom:hover {
+            background-color: rgba(59, 130, 246, 0.08);
+            color: var(--accent-blue);
+        }
+        
+        .dropdown-label .fas {
+            margin-right: 0.5rem;
+        }
+        
+        .navbar-toggler {
+            border: 1px solid var(--border-light);
+            padding: 0.5rem 0.75rem;
+            border-radius: 6px;
+            cursor: pointer;
+        }
+        
+        .navbar-toggler:focus {
+            box-shadow: none;
+        }
+        
+        /* Mobile menu toggle */
+        .navbar-toggler-checkbox {
+            display: none;
+        }
+        
+        #navbarCollapse {
+            display: none;
+        }
+        
+        .navbar-toggler-checkbox:checked ~ #navbarCollapse {
+            display: block;
+        }
+        
+        /* Hero Carousel */
+        .header-carousel-item {
+            background: linear-gradient(135deg, var(--primary-dark) 0%, #1e3a8a 100%);
+            min-height: 85vh;
+            display: flex;
+            align-items: center;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .header-carousel-item::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 1000" preserveAspectRatio="none"><path d="M0,0 L1000,0 L1000,1000 L0,1000 Z" fill="none" stroke="rgba(255,255,255,0.03)" stroke-width="2"/></svg>');
+            background-size: 40px 40px;
+        }
+        
+        .carousel-caption {
+            position: relative;
+            text-align: left;
+            right: 0;
+            left: 0;
+            padding-top: 0;
+            padding-bottom: 0;
+            color: #fff;
+        }
+        
+        .carousel-caption h1 {
+            font-size: 3.2rem;
+            font-weight: 800;
+            margin-bottom: 1.5rem;
+            line-height: 1.1;
+            color: #fff;
+        }
+        
+        .carousel-caption p {
+            font-size: 1.2rem;
+            margin-bottom: 2rem;
+            color: rgba(255, 255, 255, 0.85);
+            max-width: 90%;
+        }
+        
+        .calrousel-img {
+            position: relative;
+            z-index: 2;
+        }
+        
+        .calrousel-img img {
+            border-radius: 12px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.4);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        /* Feature Cards (if added) */
+        .feature-card {
+            background: var(--card-bg);
+            border-radius: 12px;
+            padding: 2rem;
+            height: 100%;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
+            border: 1px solid var(--border-light);
+            transition: all 0.3s ease;
+        }
+        
+        .feature-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            border-color: var(--accent-blue);
+        }
+        
+        .feature-icon {
+            width: 70px;
+            height: 70px;
+            border-radius: 12px;
+            background: linear-gradient(135deg, var(--accent-blue), var(--accent-teal));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 1.5rem;
+        }
+        
+        .feature-icon i {
+            font-size: 1.8rem;
+            color: white;
+        }
+        
+        /* Back to top button */
+        .back-to-top {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            z-index: 999;
+            width: 50px;
+            height: 50px;
+            border-radius: 10px;
+            background: linear-gradient(135deg, var(--accent-blue), var(--accent-teal));
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+            box-shadow: 0 5px 15px rgba(59, 130, 246, 0.4);
+            transition: all 0.3s ease;
+            border: none;
+        }
+        
+        .back-to-top:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(59, 130, 246, 0.5);
+            color: white;
+        }
+        
+        /* Modal */
+        .modal-content {
+            border-radius: 12px;
+            border: none;
+            overflow: hidden;
+        }
+        
+        .modal-header {
+            background-color: var(--primary-dark);
+            color: white;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .modal-body.bg-primary {
+            background: linear-gradient(135deg, var(--primary-dark) 0%, #1e3a8a 100%) !important;
+        }
+        
+        .btn-close {
+            filter: invert(1);
+        }
+        
+        /* Custom buttons */
+        .btn-primary {
+            background: linear-gradient(135deg, var(--accent-blue), var(--accent-teal));
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(59, 130, 246, 0.3);
+        }
+        
+        /* Form controls */
+        .form-control {
+            border: 1px solid var(--border-light);
+            border-radius: 8px;
+            padding: 0.75rem 1rem;
+            transition: all 0.3s ease;
+        }
+        
+        .form-control:focus {
+            border-color: var(--accent-blue);
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
+        }
+        
+        /* Responsive adjustments */
+        @media (max-width: 992px) {
+            .carousel-caption h1 {
+                font-size: 2.5rem;
+            }
+            
+            .navbar-nav {
+                padding: 1rem 0;
+            }
+            
+            .nav-link, .dropdown-label {
+                margin: 0.25rem 0;
+                display: block;
+                width: 100%;
+            }
+            
+            #navbarCollapse {
+                position: absolute;
+                top: 100%;
+                left: 0;
+                right: 0;
+                background: white;
+                padding: 1rem;
+                box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+                border-top: 1px solid var(--border-light);
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .carousel-caption h1 {
+                font-size: 2rem;
+            }
+            
+            .header-carousel-item {
+                min-height: 70vh;
+            }
+            
+            .navbar-brand h1 {
+                font-size: 1.5rem;
+            }
+        }
+        
+        /* Animation classes */
+        .animated {
+            animation-duration: 1s;
+            animation-fill-mode: both;
+        }
+        
+        .fadeInLeft {
+            animation-name: fadeInLeft;
+        }
+        
+        .fadeInRight {
+            animation-name: fadeInRight;
+        }
+        
+        @keyframes fadeInLeft {
+            from {
+                opacity: 0;
+                transform: translateX(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+        
+        @keyframes fadeInRight {
+            from {
+                opacity: 0;
+                transform: translateX(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+        
+        /* Owl Carousel customizations */
+        .owl-carousel .owl-nav button {
+            background: rgba(255, 255, 255, 0.2) !important;
+            color: white !important;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            transition: all 0.3s ease;
+        }
+        
+        .owl-carousel .owl-nav button:hover {
+            background: rgba(255, 255, 255, 0.3) !important;
+        }
+        
+        .owl-carousel .owl-nav button.owl-prev {
+            left: 20px;
+        }
+        
+        .owl-carousel .owl-nav button.owl-next {
+            right: 20px;
+        }
+        
+        /* Custom scrollbar */
+        ::-webkit-scrollbar {
+            width: 10px;
+        }
+        
+        ::-webkit-scrollbar-track {
+            background: var(--neutral-gray);
+        }
+        
+        ::-webkit-scrollbar-thumb {
+            background: linear-gradient(135deg, var(--accent-blue), var(--accent-teal));
+            border-radius: 5px;
+        }
+        
+        ::-webkit-scrollbar-thumb:hover {
+            background: linear-gradient(135deg, #2563eb, #0891b2);
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Navbar & Hero Start -->
+    {% block nav%}
+    <div class="container-fluid nav-bar px-0 px-lg-4 py-lg-0">
+        <div class="container">
+            <nav class="navbar navbar-expand-lg navbar-light"> 
+                <a href="#" class="navbar-brand p-0">
+                    <h1 class="mb-0"><i class="fas fa-shield-alt me-2"></i>ForensicSecure</h1>
+                </a>
+                <!-- Mobile menu toggle (checkbox hack) -->
+                <input type="checkbox" id="navbar-toggler" class="navbar-toggler-checkbox">
+                <label for="navbar-toggler" class="navbar-toggler">
+                    <span class="fas fa-bars"></span>
+                </label>
+                <div class="collapse navbar-collapse" id="navbarCollapse">
+                    <div class="navbar-nav mx-0 mx-lg-auto">
+                        <a href="{% url 'index'%}" class="nav-item nav-link active">Home</a>
+                        
+                        <!-- User Dropdown -->
+                        <div class="nav-item dropdown-container">
+                            <input type="checkbox" id="user-dropdown" class="dropdown-toggle">
+                            <label for="user-dropdown" class="dropdown-label">
+                                <i class="fas fa-user me-1"></i>User
+                            </label>
+                            <div class="dropdown-menu-custom">
+                                <a href="{% url 'user_login' %}" class="dropdown-item-custom">
+                                    <i class="fas fa-sign-in-alt me-2"></i>Login
+                                </a>
+                                <a href="{% url 'user_Registration' %}" class="dropdown-item-custom">
+                                    <i class="fas fa-user-plus me-2"></i>Register
+                                </a>
+                            </div>
+                        </div>
+                        
+                        <!-- Admin Dropdown -->
+                        <div class="nav-item dropdown-container">
+                            <input type="checkbox" id="admin-dropdown" class="dropdown-toggle">
+                            <label for="admin-dropdown" class="dropdown-label">
+                                <i class="fas fa-lock me-1"></i>Admin
+                            </label>
+                            <div class="dropdown-menu-custom">
+                                <a href="{% url 'admin_login'%}" class="dropdown-item-custom">
+                                    <i class="fas fa-sign-in-alt me-2"></i>Login
+                                </a>
+                                
+                            </div>
+                        </div>
+                        
+                        <!-- Court Dropdown -->
+                        <div class="nav-item dropdown-container">
+                            <input type="checkbox" id="court-dropdown" class="dropdown-toggle">
+                            <label for="court-dropdown" class="dropdown-label">
+                                <i class="fas fa-balance-scale me-1"></i>Court
+                            </label>
+                            <div class="dropdown-menu-custom">
+                                <a href="{% url 'court_login' %}" class="dropdown-item-custom">
+                                    <i class="fas fa-sign-in-alt me-2"></i>Login
+                                </a>
+                                
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </nav>
+        </div>
+    </div>
+    {% endblock %}
+    <!-- Navbar & Hero End -->
+
+    <!-- Modal Search Start -->
+    <div class="modal fade" id="searchModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-fullscreen">
+            <div class="modal-content rounded-0">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Search Digital Evidence</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body d-flex align-items-center bg-primary">
+                    <div class="input-group w-75 mx-auto d-flex">
+                        <input type="search" class="form-control p-3" placeholder="Enter case ID, keywords, or evidence hash..." aria-describedby="search-icon-1">
+                        <span id="search-icon-1" class="btn bg-light border input-group-text p-3"><i class="fa fa-search"></i></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Modal Search End -->
+
+    {% block body %}
+    <!-- Carousel Start -->
+    <div class="header-carousel owl-carousel">
+        <div class="header-carousel-item bg-primary">
+            <div class="carousel-caption">
+                <div class="container">
+                    <div class="row g-4 align-items-center">
+                        <div class="col-lg-7 animated fadeInLeft">
+                            <div class="text-sm-center text-md-start">
+                                <h1 class="display-1 text-white mb-4">Advanced Security in Digital Forensics</h1>
+                                <p class="lead">Authenticated storage with cryptographic key management for legal admissibility and chain of custody integrity.</p>
+                                <div class="mt-4">
+                                    <span class="badge bg-success me-2 p-2"><i class="fas fa-check-circle me-1"></i> AES-256 Encryption</span>
+                                    <span class="badge bg-warning me-2 p-2"><i class="fas fa-fingerprint me-1"></i> Digital Signatures</span>
+                                    <span class="badge bg-info me-2 p-2"><i class="fas fa-link me-1"></i> Chain of Custody</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-5 animated fadeInRight">
+                            <div class="calrousel-img" style="object-fit: cover;">
+                                <img src="/static/img/carousel-2.png" class="img-fluid w-100" alt="Digital Forensics Dashboard">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="header-carousel-item bg-primary">
+            <div class="carousel-caption">
+                <div class="container">
+                    <div class="row g-4 align-items-center">
+                        <div class="col-lg-7 animated fadeInLeft">
+                            <div class="text-sm-center text-md-start">
+                                <h1 class="display-1 text-white mb-4">Secure Evidence Management</h1>
+                                <p class="lead">End-to-end encrypted storage with blockchain-based verification for court-admissible digital evidence.</p>
+                                <div class="mt-4">
+                                    <span class="badge bg-success me-2 p-2"><i class="fas fa-shield-alt me-1"></i> Tamper-Proof</span>
+                                    <span class="badge bg-warning me-2 p-2"><i class="fas fa-user-lock me-1"></i> Role-Based Access</span>
+                                    <span class="badge bg-info me-2 p-2"><i class="fas fa-audit me-1"></i> Audit Trail</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-5 animated fadeInRight">
+                            <div class="calrousel-img" style="object-fit: cover;">
+                                <img src="/static/img/carousel-2.png" class="img-fluid w-100" alt="Evidence Security Interface">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Carousel End -->
+    
+    <!-- Features Section (optional addition) -->
+    <div class="container py-5">
+        <div class="row g-4">
+            <div class="col-12 text-center mb-5">
+                <h2 class="fw-bold">Digital Forensics Security Features</h2>
+                <p class="text-muted">Comprehensive tools for secure evidence management</p>
+            </div>
+            <div class="col-md-4">
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-lock"></i>
+                    </div>
+                    <h4>Encrypted Storage</h4>
+                    <p class="text-muted">Military-grade encryption for all digital evidence with secure key management and access controls.</p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-link"></i>
+                    </div>
+                    <h4>Chain of Custody</h4>
+                    <p class="text-muted">Complete audit trail tracking every access and modification to ensure legal admissibility.</p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-gavel"></i>
+                    </div>
+                    <h4>Court Integration</h4>
+                    <p class="text-muted">Direct integration with court systems for seamless submission of digital evidence.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endblock %}
+
+    <!-- Back to Top -->
+    <a href="#" class="btn btn-primary btn-lg-square rounded-circle back-to-top"><i class="fa fa-arrow-up"></i></a>   
+
+    
+    <!-- JavaScript Libraries -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist//static/js/bootstrap.bundle.min.js"></script>
+    <script src="/static/lib/wow/wow.min.js"></script>
+    <script src="/static/lib/easing/easing.min.js"></script>
+    <script src="/static/lib/waypoints/waypoints.min.js"></script>
+    <script src="/static/lib/counterup/counterup.min.js"></script>
+    <script src="/static/lib/lightbox//static/js/lightbox.min.js"></script>
+    <script src="/static/lib/owlcarousel/owl.carousel.min.js"></script>
+    
+
+    <!-- Template Javascript -->
+    <script src="/static/js/main.js"></script>
+</body>
+
+</html>

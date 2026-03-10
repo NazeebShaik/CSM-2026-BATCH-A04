@@ -1,0 +1,455 @@
+{% extends 'admin_dashboard.html' %}
+
+{% block body %}
+<div class="modern-admin-container">
+    <div class="admin-header">
+        <h1 class="page-title">User Management</h1>
+        <p class="page-subtitle">Manage user registration requests</p>
+    </div>
+
+    <div class="card modern-card">
+        <div class="card-header">
+            <div class="card-title">
+                <i class="fas fa-users"></i>
+                Pending User Requests
+            </div>
+            <div class="card-stats">
+                <span class="stat-badge">Total: {{ page_obj.paginator.count }}</span>
+            </div>
+        </div>
+
+        <div class="table-responsive">
+            <table class="modern-table">
+                <thead>
+                    <tr>
+                        <th>
+                            <div class="table-header">
+                                <i class="fas fa-envelope"></i>
+                                <span>Email</span>
+                            </div>
+                        </th>
+                        <th>
+                            <div class="table-header">
+                                <i class="fas fa-user"></i>
+                                <span>Username</span>
+                            </div>
+                        </th>
+                        <th>
+                            <div class="table-header">
+                                <i class="fas fa-phone"></i>
+                                <span>Phone</span>
+                            </div>
+                        </th>
+                        <th>
+                            <div class="table-header">
+                                <i class="fas fa-map-marker-alt"></i>
+                                <span>Address</span>
+                            </div>
+                        </th>
+                        <th>
+                            <div class="table-header">
+                                <i class="fas fa-info-circle"></i>
+                                <span>Status</span>
+                            </div>
+                        </th>
+                        <th class="actions-column">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for user in page_obj %}
+                    <tr class="user-row {% if user.status == 'pending' %}pending-row{% endif %}">
+                        <td>
+                            <div class="user-info">
+                                <i class="fas fa-envelope icon-small"></i>
+                                {{ user.email }}
+                            </div>
+                        </td>
+                        <td>{{ user.username }}</td>
+                        <td>
+                            <div class="phone-info">
+                                <i class="fas fa-phone icon-small"></i>
+                                {{ user.phone|default:"-" }}
+                            </div>
+                        </td>
+                        <td>
+                            <div class="address-info">
+                                <i class="fas fa-map-marker-alt icon-small"></i>
+                                {{ user.address|truncatechars:30 }}
+                            </div>
+                        </td>
+                        <td>
+                            <span class="status-badge status-{{ user.status|lower }}">
+                                {{ user.status }}
+                            </span>
+                        </td>
+                        <td>
+                            <div class="action-buttons">
+                                <a href="{% url 'acceptrequest' user.email %}" class="btn-action btn-accept" title="Accept User">
+                                    <i class="fas fa-check"></i>
+                                    <span>Accept</span>
+                                </a>
+                                <a href="{% url 'rejectrequest' user.email %}" class="btn-action btn-reject" title="Reject User">
+                                    <i class="fas fa-times"></i>
+                                    <span>Reject</span>
+                                </a>
+                            </div>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="6" class="empty-state">
+                            <div class="empty-content">
+                                <i class="fas fa-users empty-icon"></i>
+                                <h3>No Pending Requests</h3>
+                                <p>All user requests have been processed.</p>
+                            </div>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Modern Pagination -->
+        {% if page_obj.paginator.num_pages > 1 %}
+        <div class="pagination-section">
+            <div class="pagination-info">
+                Showing {{ page_obj.start_index }} - {{ page_obj.end_index }} of {{ page_obj.paginator.count }} users
+            </div>
+            
+            <div class="pagination-controls">
+                {% if page_obj.has_previous %}
+                <a href="?page={{ page_obj.previous_page_number }}" class="pagination-btn">
+                    <i class="fas fa-chevron-left"></i>
+                    Previous
+                </a>
+                {% else %}
+                <span class="pagination-btn disabled">
+                    <i class="fas fa-chevron-left"></i>
+                    Previous
+                </span>
+                {% endif %}
+
+                <div class="page-numbers">
+                    {% for num in page_obj.paginator.page_range %}
+                        {% if num == page_obj.number %}
+                        <span class="page-number active">{{ num }}</span>
+                        {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
+                        <a href="?page={{ num }}" class="page-number">{{ num }}</a>
+                        {% endif %}
+                    {% endfor %}
+                </div>
+
+                {% if page_obj.has_next %}
+                <a href="?page={{ page_obj.next_page_number }}" class="pagination-btn">
+                    Next
+                    <i class="fas fa-chevron-right"></i>
+                </a>
+                {% else %}
+                <span class="pagination-btn disabled">
+                    Next
+                    <i class="fas fa-chevron-right"></i>
+                </span>
+                {% endif %}
+            </div>
+        </div>
+        {% endif %}
+    </div>
+</div>
+
+<style>
+    /* Modern Styles */
+    .modern-admin-container {
+        padding: 30px;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        min-height: calc(100vh - 80px);
+    }
+
+    .admin-header {
+        margin-bottom: 30px;
+        color: white;
+        text-align: center;
+    }
+
+    .page-title {
+        font-size: 2.5rem;
+        font-weight: 600;
+        margin-bottom: 10px;
+        text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+    }
+
+    .page-subtitle {
+        font-size: 1.1rem;
+        opacity: 0.9;
+    }
+
+    .modern-card {
+        background: white;
+        border-radius: 20px;
+        box-shadow: 0 20px 60px rgba(0,0,0,0.15);
+        overflow: hidden;
+        margin: 0 auto;
+        max-width: 1400px;
+    }
+
+    .card-header {
+        padding: 25px 30px;
+        background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+        color: white;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .card-title {
+        font-size: 1.5rem;
+        font-weight: 600;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .card-stats .stat-badge {
+        background: rgba(255,255,255,0.2);
+        padding: 8px 16px;
+        border-radius: 50px;
+        font-weight: 500;
+    }
+
+    .table-responsive {
+        overflow-x: auto;
+        padding: 20px;
+    }
+
+    .modern-table {
+        width: 100%;
+        border-collapse: separate;
+        border-spacing: 0;
+    }
+
+    .modern-table thead {
+        background: #f8f9fa;
+    }
+
+    .modern-table th {
+        padding: 20px 15px;
+        font-weight: 600;
+        color: #495057;
+        border-bottom: 2px solid #e9ecef;
+        text-align: left;
+    }
+
+    .table-header {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .modern-table tbody tr {
+        transition: all 0.3s ease;
+        border-bottom: 1px solid #f1f3f4;
+    }
+
+    .modern-table tbody tr:hover {
+        background: #f8f9fa;
+        transform: translateX(5px);
+    }
+
+    .modern-table td {
+        padding: 20px 15px;
+        color: #6c757d;
+    }
+
+    .user-info, .phone-info, .address-info {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .icon-small {
+        color: #6a11cb;
+        width: 20px;
+    }
+
+    .status-badge {
+        padding: 6px 12px;
+        border-radius: 20px;
+        font-size: 0.85rem;
+        font-weight: 500;
+        text-transform: capitalize;
+    }
+
+    .status-pending {
+        background: #fff3cd;
+        color: #856404;
+    }
+
+    .status-active {
+        background: #d4edda;
+        color: #155724;
+    }
+
+    .status-rejected {
+        background: #f8d7da;
+        color: #721c24;
+    }
+
+    .actions-column {
+        width: 200px;
+    }
+
+    .action-buttons {
+        display: flex;
+        gap: 10px;
+    }
+
+    .btn-action {
+        padding: 10px 15px;
+        border-radius: 10px;
+        text-decoration: none;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-weight: 500;
+        transition: all 0.3s ease;
+        border: none;
+        cursor: pointer;
+    }
+
+    .btn-accept {
+        background: linear-gradient(135deg, #00b09b, #96c93d);
+        color: white;
+    }
+
+    .btn-reject {
+        background: linear-gradient(135deg, #ff416c, #ff4b2b);
+        color: white;
+    }
+
+    .btn-action:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        opacity: 0.9;
+    }
+
+    .empty-state {
+        text-align: center;
+        padding: 60px 20px;
+    }
+
+    .empty-content {
+        max-width: 400px;
+        margin: 0 auto;
+    }
+
+    .empty-icon {
+        font-size: 4rem;
+        color: #dee2e6;
+        margin-bottom: 20px;
+    }
+
+    /* Pagination Styles */
+    .pagination-section {
+        padding: 25px 30px;
+        border-top: 1px solid #e9ecef;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        background: #f8f9fa;
+    }
+
+    .pagination-info {
+        color: #6c757d;
+        font-weight: 500;
+    }
+
+    .pagination-controls {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+    }
+
+    .pagination-btn {
+        padding: 10px 20px;
+        background: white;
+        border: 2px solid #e9ecef;
+        border-radius: 10px;
+        color: #495057;
+        text-decoration: none;
+        font-weight: 500;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        transition: all 0.3s ease;
+    }
+
+    .pagination-btn:hover:not(.disabled) {
+        background: #6a11cb;
+        color: white;
+        border-color: #6a11cb;
+    }
+
+    .pagination-btn.disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+    }
+
+    .page-numbers {
+        display: flex;
+        gap: 8px;
+    }
+
+    .page-number {
+        width: 40px;
+        height: 40px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 10px;
+        text-decoration: none;
+        color: #495057;
+        font-weight: 500;
+        transition: all 0.3s ease;
+    }
+
+    .page-number.active {
+        background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+        color: white;
+    }
+
+    .page-number:not(.active):hover {
+        background: #f1f3f4;
+    }
+
+    /* Responsive Design */
+    @media (max-width: 768px) {
+        .modern-admin-container {
+            padding: 15px;
+        }
+        
+        .page-title {
+            font-size: 1.8rem;
+        }
+        
+        .card-header {
+            flex-direction: column;
+            gap: 15px;
+            text-align: center;
+        }
+        
+        .action-buttons {
+            flex-direction: column;
+            gap: 5px;
+        }
+        
+        .pagination-section {
+            flex-direction: column;
+            gap: 20px;
+            text-align: center;
+        }
+    }
+</style>
+
+<!-- Font Awesome for Icons -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+{% endblock %}

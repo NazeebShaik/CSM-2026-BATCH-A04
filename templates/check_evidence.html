@@ -1,0 +1,550 @@
+{% extends 'index.html' %}
+
+{% block nav %}
+<div class="container-fluid nav-bar px-0 px-lg-4 py-lg-0">
+    <div class="container">
+        <nav class="navbar navbar-expand-lg navbar-light">
+
+            <!-- LOGO -->
+            <a href="{% url 'user_home' %}" class="navbar-brand p-0">
+                <h1 class="mb-0">
+                    Forensic Security
+                </h1>
+            </a>
+
+            <!-- MOBILE TOGGLE -->
+            <input type="checkbox" id="navbar-toggler" class="navbar-toggler-checkbox">
+            <label for="navbar-toggler" class="navbar-toggler">
+                <span class="fas fa-bars"></span>
+            </label>
+
+            <!-- NAV ITEMS -->
+            <div class="collapse navbar-collapse" id="navbarCollapse">
+                <div class="navbar-nav mx-0 mx-lg-auto">
+
+                    <!-- HOME -->
+                    <a href="{% url 'user_home' %}" class="nav-item nav-link">
+                         Home
+                    </a>
+
+                    <!-- EVIDENCE DATA -->
+                    <div class="nav-item dropdown-container">
+                        <input type="checkbox" id="evidence-dropdown" class="dropdown-toggle">
+                        <label for="evidence-dropdown" class="dropdown-label">
+                             Evidence Data
+                        </label>
+
+                        <div class="dropdown-menu-custom">
+                            <a href="{% url 'Upload_Files' %}" class="dropdown-item-custom">
+                                 Upload Evidence
+                            </a>
+                            <a href="{% url 'View_Encrypted' %}" class="dropdown-item-custom">
+                                 View Evidence
+                            </a>
+                        </div>
+                    </div>
+
+                    <!-- CHECK EVIDENCE -->
+                    <a href="{% url 'check_evidence' %}" class="nav-item nav-link active">
+                         Check Evidence
+                    </a>
+
+                    <!-- EVIDENCE RESPONSE -->
+                    <div class="nav-item dropdown-container">
+                        <input type="checkbox" id="response-dropdown" class="dropdown-toggle">
+                        <label for="response-dropdown" class="dropdown-label">
+                             Evidence Response
+                        </label>
+
+                        <div class="dropdown-menu-custom">
+                            <a href="{% url 'Court_Request' %}" class="dropdown-item-custom">
+                                 Court Request
+                            </a>
+                        </div>
+                    </div>
+
+                    <!-- LOGOUT -->
+                    <a href="{% url 'user_login' %}" class="nav-item nav-link text-danger">
+                        <i class="fas fa-sign-out-alt me-1"></i> Logout
+                    </a>
+
+                </div>
+            </div>
+        </nav>
+    </div>
+</div>
+{% endblock %}
+
+{% block body %}
+<style>
+    /* Sky Blue Color Theme */
+    :root {
+        --sky-blue-light: #87CEEB;
+        --sky-blue: #7EC8E3;
+        --sky-blue-medium: #4DA8DA;
+        --sky-blue-dark: #0077BE;
+        --sky-blue-darker: #005A8C;
+        --sky-blue-gradient: linear-gradient(135deg, #87CEEB 0%, #4DA8DA 50%, #0077BE 100%);
+        --white: #FFFFFF;
+        --light-gray: #F8F9FA;
+        --shadow: rgba(0, 119, 190, 0.15);
+    }
+
+    body {
+        font-family: "Segoe UI", Tahoma, sans-serif;
+        background: var(--sky-blue-gradient);
+        min-height: 100vh;
+        margin: 0;
+        padding: 0;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .main-content {
+        flex: 1;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 40px 20px;
+        margin-top: 80px; /* Space for fixed navbar */
+    }
+
+    .integrity-container {
+        width: 100%;
+        max-width: 500px;
+        background: var(--white);
+        border-radius: 25px;
+        box-shadow: 0 25px 60px var(--shadow);
+        overflow: hidden;
+        margin-top: 20px;
+    }
+
+    .integrity-header {
+        background: var(--sky-blue-gradient);
+        padding: 40px 30px;
+        text-align: center;
+        color: var(--white);
+        position: relative;
+        overflow: hidden;
+    }
+
+    .integrity-header::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M11 18c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm48 25c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm-43-7c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm63 31c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM34 90c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm56-76c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM12 86c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm28-65c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm23-11c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-6 60c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm29 22c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zM32 63c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm57-13c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-9-21c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM60 91c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM35 41c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM12 60c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2z' fill='%230077BE' fill-opacity='0.1' fill-rule='evenodd'/%3E%3C/svg%3E");
+        opacity: 0.1;
+    }
+
+    .integrity-icon {
+        font-size: 3.5rem;
+        margin-bottom: 20px;
+        color: var(--white);
+        background: rgba(255, 255, 255, 0.2);
+        width: 80px;
+        height: 80px;
+        line-height: 80px;
+        border-radius: 50%;
+        margin: 0 auto 20px;
+    }
+
+    .integrity-title {
+        font-size: 2rem;
+        font-weight: 700;
+        margin-bottom: 10px;
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    .integrity-subtitle {
+        font-size: 1rem;
+        opacity: 0.9;
+        max-width: 400px;
+        margin: 0 auto;
+        line-height: 1.5;
+    }
+
+    .integrity-body {
+        padding: 40px 30px;
+    }
+
+    /* Form Styles */
+    .integrity-form {
+        max-width: 100%;
+    }
+
+    .form-group {
+        margin-bottom: 25px;
+        position: relative;
+    }
+
+    .form-label {
+        font-weight: 600;
+        color: var(--sky-blue-darker);
+        display: block;
+        margin-bottom: 10px;
+        font-size: 1rem;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .form-label i {
+        color: var(--sky-blue-medium);
+        font-size: 1.1rem;
+    }
+
+    /* Select Dropdown */
+    .custom-select {
+        width: 100%;
+        padding: 16px 20px;
+        border-radius: 12px;
+        border: 2px solid #E0F4FF;
+        background: var(--light-gray);
+        color: var(--sky-blue-darker);
+        font-size: 1rem;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        appearance: none;
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20' fill='%234DA8DA'%3E%3Cpath fill-rule='evenodd' d='M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z' clip-rule='evenodd'/%3E%3C/svg%3E");
+        background-repeat: no-repeat;
+        background-position: right 20px center;
+        background-size: 16px;
+    }
+
+    .custom-select:focus {
+        outline: none;
+        border-color: var(--sky-blue-medium);
+        box-shadow: 0 0 0 3px rgba(77, 168, 218, 0.2);
+        background: var(--white);
+    }
+
+    .custom-select option {
+        padding: 12px;
+        background: var(--white);
+        color: var(--sky-blue-darker);
+    }
+
+    /* File Upload */
+    .file-upload-container {
+        position: relative;
+        margin: 25px 0 30px;
+    }
+
+    .file-upload-label {
+        display: block;
+        padding: 25px;
+        background: linear-gradient(135deg, #E0F4FF 0%, #F0F9FF 100%);
+        border: 2px dashed var(--sky-blue);
+        border-radius: 15px;
+        text-align: center;
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+
+    .file-upload-label:hover {
+        border-color: var(--sky-blue-medium);
+        background: linear-gradient(135deg, #F0F9FF 0%, #E0F4FF 100%);
+        transform: translateY(-2px);
+    }
+
+    .file-upload-icon {
+        font-size: 2.5rem;
+        color: var(--sky-blue);
+        margin-bottom: 15px;
+    }
+
+    .file-upload-text {
+        color: var(--sky-blue-darker);
+        font-weight: 600;
+        margin-bottom: 8px;
+        font-size: 1.1rem;
+    }
+
+    .file-upload-hint {
+        color: #90C6E0;
+        font-size: 0.9rem;
+    }
+
+    .file-upload-input {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        opacity: 0;
+        cursor: pointer;
+    }
+
+    /* Verify Button */
+    .verify-btn {
+        width: 100%;
+        padding: 18px;
+        background: var(--sky-blue-gradient);
+        color: var(--white);
+        border: none;
+        border-radius: 12px;
+        font-size: 1.2rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        position: relative;
+        overflow: hidden;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+        margin-top: 10px;
+    }
+
+    .verify-btn:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 10px 25px rgba(0, 119, 190, 0.3);
+    }
+
+    .verify-btn:active {
+        transform: translateY(-1px);
+    }
+
+    .verify-btn i {
+        font-size: 1.3rem;
+    }
+
+    /* Progress Animation */
+    .verify-btn::after {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+        transition: left 0.5s;
+    }
+
+    .verify-btn:hover::after {
+        left: 100%;
+    }
+
+    /* Result Message */
+    .result-message {
+        margin-top: 25px;
+        padding: 20px;
+        border-radius: 15px;
+        text-align: center;
+        font-weight: 600;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 15px;
+        animation: slideIn 0.5s ease;
+        border-left: 5px solid;
+    }
+
+    @keyframes slideIn {
+        from {
+            transform: translateY(-10px);
+            opacity: 0;
+        }
+        to {
+            transform: translateY(0);
+            opacity: 1;
+        }
+    }
+
+    .result-safe {
+        background: linear-gradient(135deg, #D4F5E9 0%, #B8F0E0 100%);
+        color: #166534;
+        border-color: #34C759;
+    }
+
+    .result-safe i {
+        color: #34C759;
+        font-size: 1.5rem;
+    }
+
+    .result-tampered {
+        background: linear-gradient(135deg, #FFE5E5 0%, #FFD1D1 100%);
+        color: #991b1b;
+        border-color: #FF3B30;
+    }
+
+    .result-tampered i {
+        color: #FF3B30;
+        font-size: 1.5rem;
+    }
+
+    /* Cloud Animation */
+    .cloud {
+        position: absolute;
+        background: rgba(255, 255, 255, 0.9);
+        border-radius: 50%;
+        box-shadow: 0 0 20px rgba(255, 255, 255, 0.5);
+        animation: float 20s infinite linear;
+    }
+
+    .cloud-1 {
+        width: 60px;
+        height: 25px;
+        top: 30%;
+        left: 10%;
+        animation-delay: 0s;
+    }
+
+    .cloud-2 {
+        width: 40px;
+        height: 15px;
+        top: 60%;
+        right: 15%;
+        animation-delay: -5s;
+        animation-duration: 15s;
+    }
+
+    @keyframes float {
+        0% {
+            transform: translateX(0) translateY(0);
+        }
+        25% {
+            transform: translateX(15px) translateY(-8px);
+        }
+        50% {
+            transform: translateX(30px) translateY(0);
+        }
+        75% {
+            transform: translateX(15px) translateY(8px);
+        }
+        100% {
+            transform: translateX(0) translateY(0);
+        }
+    }
+
+    /* Responsive Design */
+    @media (max-width: 768px) {
+        .main-content {
+            padding: 20px 15px;
+            margin-top: 70px;
+        }
+        
+        .integrity-container {
+            max-width: 100%;
+        }
+        
+        .integrity-header {
+            padding: 30px 20px;
+        }
+        
+        .integrity-body {
+            padding: 30px 20px;
+        }
+        
+        .integrity-title {
+            font-size: 1.8rem;
+        }
+        
+        .integrity-icon {
+            width: 70px;
+            height: 70px;
+            line-height: 70px;
+            font-size: 3rem;
+        }
+    }
+
+    @media (max-width: 480px) {
+        .main-content {
+            padding: 15px 10px;
+            margin-top: 60px;
+        }
+        
+        .integrity-header {
+            padding: 25px 15px;
+        }
+        
+        .integrity-body {
+            padding: 25px 15px;
+        }
+        
+        .integrity-title {
+            font-size: 1.6rem;
+        }
+        
+        .verify-btn {
+            padding: 16px;
+            font-size: 1.1rem;
+        }
+        
+        .file-upload-label {
+            padding: 20px;
+        }
+    }
+</style>
+
+<div class="main-content">
+    <div class="integrity-container">
+        <div class="integrity-header">
+            <!-- Floating Clouds -->
+            <div class="cloud cloud-1"></div>
+            <div class="cloud cloud-2"></div>
+            
+            <div class="integrity-icon">
+                <i class="fas fa-shield-alt"></i>
+            </div>
+            <h1 class="integrity-title">Evidence Integrity Check</h1>
+            <p class="integrity-subtitle">Verify the authenticity and integrity of evidence files to ensure they haven't been tampered with.</p>
+        </div>
+        
+        <div class="integrity-body">
+            <form method="post" enctype="multipart/form-data" class="integrity-form">
+                {% csrf_token %}
+                
+                <div class="form-group">
+                    <label for="case_number" class="form-label">
+                        <i class="fas fa-folder"></i>
+                        Select Case Number
+                    </label>
+                    <select name="case_number" id="case_number" class="custom-select" required>
+                        <option value="">-- Select Case Number --</option>
+                        {% for c in cases %}
+                            <option value="{{ c.case_number }}">{{ c.case_number }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <div class="file-upload-container">
+                        <label for="file" class="file-upload-label">
+                            <div class="file-upload-icon">
+                                <i class="fas fa-file-upload"></i>
+                            </div>
+                            <div class="file-upload-text">Select File to Verify</div>
+                            <div class="file-upload-hint">Click to browse or drag and drop your evidence file</div>
+                        </label>
+                        <input type="file" name="file" id="file" class="file-upload-input" required>
+                    </div>
+                </div>
+                
+                <button type="submit" class="verify-btn">
+                    <i class="fas fa-search"></i>
+                    Verify Evidence
+                </button>
+            </form>
+            
+            {% if msg %}
+                <div class="result-message {% if 'safe' in msg|lower %}result-safe{% else %}result-tampered{% endif %}">
+                    <i class="fas {% if 'safe' in msg|lower %}fa-check-circle{% else %}fa-exclamation-triangle{% endif %}"></i>
+                    <div>{{ msg }}</div>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<!-- Font Awesome Icons -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+{% endblock %}
+
+{% block noneed %}
+{% endblock %}

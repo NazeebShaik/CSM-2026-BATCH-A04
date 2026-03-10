@@ -1,0 +1,272 @@
+{% extends 'index.html' %}
+
+{% block nav %}
+<div class="container-fluid nav-bar px-0 px-lg-4 py-lg-0">
+    <div class="container">
+        <nav class="navbar navbar-expand-lg navbar-light"> 
+            <a href="{% url 'index' %}" class="navbar-brand p-0">
+                <h1 class="mb-0"><i class="fas fa-shield-alt me-2"></i>ForensicSecure</h1>
+            </a>
+            <!-- Mobile menu toggle (checkbox hack) -->
+            <input type="checkbox" id="navbar-toggler" class="navbar-toggler-checkbox">
+            <label for="navbar-toggler" class="navbar-toggler">
+                <span class="fas fa-bars"></span>
+            </label>
+            <div class="collapse navbar-collapse" id="navbarCollapse">
+                <div class="navbar-nav mx-0 mx-lg-auto">
+                    <a href="{% url 'index' %}" class="nav-item nav-link">Home</a>
+                    
+                    <!-- User Dropdown -->
+                    <div class="nav-item dropdown-container">
+                        <input type="checkbox" id="user-dropdown" class="dropdown-toggle">
+                        <label for="user-dropdown" class="dropdown-label active">
+                            <i class="fas fa-user me-1"></i>User
+                        </label>
+                        <div class="dropdown-menu-custom">
+                            <a href="{% url 'user_login' %}" class="dropdown-item-custom active">
+                                <i class="fas fa-sign-in-alt me-2"></i>Login
+                            </a>
+                            <a href="{% url 'user_Registration' %}" class="dropdown-item-custom">
+                                <i class="fas fa-user-plus me-2"></i>Register
+                            </a>
+                        </div>
+                    </div>
+                    
+                    <!-- Admin Dropdown -->
+                    <div class="nav-item dropdown-container">
+                        <input type="checkbox" id="admin-dropdown" class="dropdown-toggle">
+                        <label for="admin-dropdown" class="dropdown-label">
+                            <i class="fas fa-lock me-1"></i>Admin
+                        </label>
+                        <div class="dropdown-menu-custom">
+                            <a href="{% url 'admin_login' %}" class="dropdown-item-custom">
+                                <i class="fas fa-sign-in-alt me-2"></i>Login
+                            </a>
+                            
+                        </div>
+                    </div>
+                    
+                    <!-- Court Dropdown -->
+                    <div class="nav-item dropdown-container">
+                        <input type="checkbox" id="court-dropdown" class="dropdown-toggle">
+                        <label for="court-dropdown" class="dropdown-label">
+                            <i class="fas fa-balance-scale me-1"></i>Court
+                        </label>
+                        <div class="dropdown-menu-custom">
+                            <a href="{% url 'court_login' %}" class="dropdown-item-custom">
+                                <i class="fas fa-sign-in-alt me-2"></i>Login
+                            </a>
+                            
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </nav>
+    </div>
+</div>
+{% endblock %}
+
+{% block body %}
+<!-- User Login Form with Theme Styling -->
+<div class="container-fluid py-5" style="background: linear-gradient(135deg, var(--primary-dark) 0%, #1e3a8a 100%); min-height: calc(100vh - 80px);">
+    <div class="container">
+        <div class="row justify-content-center align-items-center">
+            <div class="col-lg-6 col-md-8 col-sm-12">
+                <div class="card shadow-lg border-0" style="border-radius: 15px; overflow: hidden;">
+                    <div class="card-header py-4" style="background: linear-gradient(135deg, var(--accent-blue), var(--accent-teal));">
+                        <h3 class="text-center text-white mb-0">
+                            <i class="fas fa-user-circle me-2"></i>USER LOGIN
+                        </h3>
+                    </div>
+                    <div class="card-body p-5">
+                        {% if msg %}
+                        <div class="alert alert-success alert-dismissible fade show" role="alert">
+                            <i class="fas fa-check-circle me-2"></i>{{ msg }}
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+                        {% endif %}
+                        
+                        {% if error %}
+                        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                            <i class="fas fa-exclamation-circle me-2"></i>{{ error }}
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+                        {% endif %}
+                        
+                        <form method="post" action="{% url 'user_login' %}" class="mt-4">
+                            {% csrf_token %}
+                            
+                            <div class="mb-4">
+                                <label for="useremail" class="form-label fw-semibold" style="color: var(--text-dark);">
+                                    <i class="fas fa-envelope me-2"></i>Email Address
+                                </label>
+                                <div class="input-group">
+                                    <span class="input-group-text bg-light border-end-0">
+                                        <i class="fas fa-at" style="color: var(--accent-blue);"></i>
+                                    </span>
+                                    <input type="email" class="form-control py-3 border-start-0" 
+                                           id="useremail" name="useremail" 
+                                           placeholder="Enter your email address" required>
+                                </div>
+                                <small class="form-text text-muted">Enter the email you used for registration</small>
+                            </div>
+                            
+                            <div class="mb-4">
+                                <label for="userpassword" class="form-label fw-semibold" style="color: var(--text-dark);">
+                                    <i class="fas fa-key me-2"></i>Password
+                                </label>
+                                <div class="input-group">
+                                    <span class="input-group-text bg-light border-end-0">
+                                        <i class="fas fa-lock" style="color: var(--accent-blue);"></i>
+                                    </span>
+                                    <input type="password" class="form-control py-3 border-start-0" 
+                                           id="userpassword" name="userpassword" 
+                                           placeholder="Enter your password" required>
+                                    <button class="btn btn-outline-secondary" type="button" id="togglePassword">
+                                        <i class="fas fa-eye"></i>
+                                    </button>
+                                </div>
+                                <small class="form-text text-muted">Minimum 8 characters with letters and numbers</small>
+                            </div>
+                            
+                            <div class="d-grid gap-2 mb-4">
+                                <button type="submit" class="btn btn-primary btn-lg py-3 fw-bold" 
+                                        style="background: linear-gradient(135deg, var(--accent-blue), var(--accent-teal)); 
+                                               border: none;">
+                                    <i class="fas fa-sign-in-alt me-2"></i>Login to Account
+                                </button>
+                            </div>
+                            
+                            <div class="text-center mb-3">
+                                <a href="{% url 'forgotpass' %}" class="text-decoration-none" 
+                                   style="color: var(--accent-blue);">
+                                    <i class="fas fa-question-circle me-1"></i>Forgot Password?
+                                </a>
+                            </div>
+                            
+                            <div class="text-center pt-3 border-top">
+                                <p class="mb-0" style="color: var(--text-light);">
+                                    Don't have an account? 
+                                    <a href="{% url 'user_Registration' %}" class="fw-bold text-decoration-none" 
+                                       style="color: var(--accent-teal);">
+                                        Create New Account
+                                    </a>
+                                </p>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="card-footer text-center py-3" style="background-color: rgba(0,0,0,0.02);">
+                        <small class="text-muted">
+                            <i class="fas fa-shield-alt me-1"></i>
+                            Your login is secured with 256-bit SSL encryption
+                        </small>
+                    </div>
+                </div>
+                
+                
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Password Toggle Script (No External JS) -->
+<style>
+    /* Password toggle styling */
+    #togglePassword {
+        border-color: var(--border-light);
+        color: var(--text-light);
+    }
+    
+    #togglePassword:hover {
+        background-color: var(--neutral-gray);
+        border-color: var(--accent-blue);
+        color: var(--accent-blue);
+    }
+    
+    /* Custom form control focus */
+    .form-control:focus {
+        border-color: var(--accent-blue);
+        box-shadow: 0 0 0 0.25rem rgba(59, 130, 246, 0.15);
+    }
+    
+    /* Card animations */
+    .card {
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    
+    .card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15) !important;
+    }
+    
+    /* Alert styling */
+    .alert {
+        border-radius: 10px;
+        border: none;
+    }
+    
+    .alert-success {
+        background-color: rgba(16, 185, 129, 0.1);
+        color: var(--success);
+        border-left: 4px solid var(--success);
+    }
+    
+    .alert-danger {
+        background-color: rgba(239, 68, 68, 0.1);
+        color: var(--danger);
+        border-left: 4px solid var(--danger);
+    }
+    
+    /* Badge styling */
+    .badge {
+        font-weight: 500;
+        font-size: 0.85rem;
+    }
+</style>
+
+{% comment %} <script>
+    // Password toggle functionality (pure JavaScript)
+    document.addEventListener('DOMContentLoaded', function() {
+        const togglePassword = document.getElementById('togglePassword');
+        const passwordInput = document.getElementById('userpassword');
+        
+        if (togglePassword && passwordInput) {
+            togglePassword.addEventListener('click', function() {
+                const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+                passwordInput.setAttribute('type', type);
+                
+                // Toggle eye icon
+                const icon = this.querySelector('i');
+                if (type === 'password') {
+                    icon.classList.remove('fa-eye-slash');
+                    icon.classList.add('fa-eye');
+                } else {
+                    icon.classList.remove('fa-eye');
+                    icon.classList.add('fa-eye-slash');
+                }
+            });
+        }
+        
+        // Form validation styling
+        const form = document.querySelector('form');
+        if (form) {
+            const inputs = form.querySelectorAll('input[required]');
+            inputs.forEach(input => {
+                input.addEventListener('invalid', function(e) {
+                    e.preventDefault();
+                    this.classList.add('is-invalid');
+                });
+                
+                input.addEventListener('input', function() {
+                    if (this.classList.contains('is-invalid')) {
+                        this.classList.remove('is-invalid');
+                    }
+                });
+            });
+        }
+    });
+</script> {% endcomment %}
+{% endblock %}
+
+{% block noneed %}
+{% endblock %}

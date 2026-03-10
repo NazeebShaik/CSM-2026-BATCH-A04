@@ -1,0 +1,38 @@
+{% extends 'user_home.html' %}
+
+{% block body %}
+
+<!-- user login form -->
+<div class="hero-wrap ftco-degree-bg" style="background-color: rgb(60, 60, 199);" data-stellar-background-ratio="0.5">
+    <div class="overlay"></div>
+    <div class="container">
+        <div class="row no-gutters slider-text justify-content-center align-items-center">
+            <div class="col-lg-8 ftco-animate">
+                <div class="text w-100 text-center mb-md-5 pb-md-5">
+                    <h4 style="color: rgb(230, 234, 235);">DECRYPT FILES</h4>
+                    {% if msg %}
+                    <p class="alert alert-success text-center" style="color: black;">{{ msg }}</p>
+                    {% endif %}
+                    {% if error %}
+                    <p class="alert alert-danger text-center" style="color: rgb(196, 29, 29);">{{ error }}</p>
+                    {% endif %}
+                    <form method="post">
+                        {% csrf_token %}
+                        <div class="row mb-3">
+                            <div class="col-md-6 mb-2">
+                                <label for="decryptiokey" class="form-label" style="color: rgb(230, 234, 235);">Decryption Key</label>
+                                <input type="text" class="form-control" id="decryptiokey" name="decryptiokey" placeholder="Enter key" required>
+                            </div>
+                        </div>
+                        <button type="submit" class="btn btn-primary btn-block" style="background-color: rgb(74, 194, 64);">Decrypt</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block noneed %}
+{% endblock %}

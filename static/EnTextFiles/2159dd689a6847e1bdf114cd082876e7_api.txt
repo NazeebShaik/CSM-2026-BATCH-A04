@@ -1,0 +1,3 @@
+83858672bc8c95667be8ae8662a569ce
+
+http://api.weatherstack.com/
