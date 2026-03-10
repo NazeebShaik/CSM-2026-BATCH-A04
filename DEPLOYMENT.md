@@ -7,9 +7,10 @@ This guide deploys your Django app on **PythonAnywhere** (free tier) with SQLite
 ## Why PythonAnywhere?
 
 - **Free** – No credit card required
-- **SQLite** – Persistent database (unlike Render/Railway free tiers)
+- **SQLite** – Persistent database
 - **Django** – Native Python/Django support
 - **HTTPS** – Free SSL on `*.pythonanywhere.com`
+- **512MB disk** – Use `requirements-pythonanywhere.txt` (slimmed; excludes tenseal) to fit
 
 ---
 
@@ -62,8 +63,8 @@ cd forensic
 python3 -m venv venv
 source venv/bin/activate   # Linux/Mac on PA
 
-# Install dependencies
-pip install -r requirements.txt
+# Install dependencies (slimmed file for 512MB limit; use --no-cache-dir to save space)
+pip install --no-cache-dir -r requirements-pythonanywhere.txt
 ```
 
 ---
@@ -107,16 +108,16 @@ python -c "import secrets; print(secrets.token_urlsafe(50))"
 
 ### 4.2 Virtualenv
 
-- **Virtualenv**: `/home/nazeebshaik/forensic/venv`
+- **Virtualenv**: `/home/YOUR_USERNAME/forensic/venv`
 
 ### 4.3 Static Files
 
 Add mappings:
 
-| URL          | Directory                               |
-|--------------|-----------------------------------------|
-| /static/     | /home/nazeebshaik/forensic/staticfiles |
-| /media/      | /home/nazeebshaik/forensic/media      |
+| URL       | Directory                              |
+|-----------|----------------------------------------|
+| /static/  | /home/YOUR_USERNAME/forensic/staticfiles |
+| /media/   | /home/YOUR_USERNAME/forensic/media     |
 
 ---
 
@@ -163,7 +164,7 @@ cd ~/forensic
 git pull origin main
 
 source venv/bin/activate
-pip install -r requirements.txt   # if requirements changed
+pip install --no-cache-dir -r requirements-pythonanywhere.txt   # if requirements changed
 python manage.py migrate          # if models changed
 python manage.py collectstatic --noinput
 ```
@@ -183,6 +184,7 @@ Then **Reload** your web app in the Web tab.
 
 | Issue            | Fix                                                                 |
 |------------------|---------------------------------------------------------------------|
+| **Disk full**    | Use `requirements-pythonanywhere.txt` and `pip install --no-cache-dir` |
 | 500 error        | Check **Error log** in Web tab. Often WSGI path or imports wrong.   |
 | Static not loading | Run `collectstatic`, check Static files mappings.                  |
 | CSRF / 403       | Ensure `CSRF_TRUSTED_ORIGINS` includes `https://*.pythonanywhere.com` |

@@ -40,11 +40,12 @@ def generate_key(password: str, salt: bytes) -> bytes:
 
 
 
-import tenseal as ts
+# tenseal: lazy import (saves ~300MB on PythonAnywhere 512MB limit - MHE functions unused)
 
 
 # Function to generate MHE keys using TenSEAL
 def generate_mhe_keys():
+    import tenseal as ts
     context = ts.context(ts.SCHEME_TYPE.BFV, poly_modulus_degree=8192, plain_modulus=1032193)
     context.generate_galois_keys()
     context.global_scale = 2 ** 40
@@ -54,6 +55,7 @@ def generate_mhe_keys():
 
 # Encrypt the data using MHE
 def encrypt_data_mhe(data, public_key):
+    import tenseal as ts
     context = ts.context_from(public_key)
     # Convert data to a list of integers or bytes if necessary
     data_list = list(data)
@@ -62,6 +64,7 @@ def encrypt_data_mhe(data, public_key):
 
 # Decrypt the data using MHE
 def decrypt_data_mhe(encrypted_data, private_key):
+    import tenseal as ts
     context = ts.context_from(private_key)
     encrypted_data = ts.bfv_vector_from(context, encrypted_data)
     decrypted_data = encrypted_data.decrypt()

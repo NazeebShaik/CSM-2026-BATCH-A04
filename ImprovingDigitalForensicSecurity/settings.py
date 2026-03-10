@@ -34,7 +34,7 @@ ALLOWED_HOSTS = os.environ.get(
     'localhost,127.0.0.1,.pythonanywhere.com'
 ).split(',')
 
-# HTTPS / CSRF for production (PythonAnywhere subdomains + localhost)
+# HTTPS / CSRF for production
 CSRF_TRUSTED_ORIGINS = [
     'https://*.pythonanywhere.com',
     'http://localhost:8000',
@@ -97,8 +97,6 @@ WSGI_APPLICATION = 'ImprovingDigitalForensicSecurity.wsgi.application'
 
 
 # Database
-# https://docs.djangoproject.com/en/5.0/ref/settings/#databases
-
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
